@@ -9,8 +9,8 @@
     </head>
     <body>
         <h1>Login Page</h1>
-        <% String authstatus = (String) request.getAttribute("authstatus"); %> 
-        <c:if test="${authstatus == 'false'}"><h1>AUTH NOK</h1></c:if>
+        <% Boolean authstatus = (Boolean) request.getAttribute("authstatus"); %> 
+        <c:if test="${authstatus == false}"><h1>AUTH NOK</h1></c:if>
         <form method="POST" action="/Arbeit/login">
            User_name  <input type="type" name="user_name">
            Pwd: <input type="password" name="password">

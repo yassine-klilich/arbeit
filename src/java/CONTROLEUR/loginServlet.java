@@ -26,7 +26,7 @@ public class loginServlet extends HttpServlet {
         String password = req.getParameter("password");
         user usr = DaoUser.checkAuth(user_name, password);
         if(usr == null) {
-            req.setAttribute("authstatus", "false");
+            req.setAttribute("authstatus", false);
             req.getRequestDispatcher("login.jsp").forward(req,resp);
         }
         else {
