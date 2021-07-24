@@ -1,5 +1,5 @@
 import DAO.DbConnector;
-import MODEL.user;
+import MODEL.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

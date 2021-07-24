@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import DAO.DaoUser;
-import MODEL.user;
+import MODEL.User;
 import javax.servlet.http.HttpSession;
        
 
@@ -24,7 +24,7 @@ public class loginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String user_name = req.getParameter("user_name");
         String password = req.getParameter("password");
-        user usr = DaoUser.checkAuth(user_name, password);
+        User usr = DaoUser.checkAuth(user_name, password);
         if(usr == null) {
             req.setAttribute("authstatus", false);
             req.getRequestDispatcher("login.jsp").forward(req,resp);

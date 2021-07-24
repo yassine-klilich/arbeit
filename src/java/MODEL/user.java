@@ -9,7 +9,7 @@ package MODEL;
  *
  * @author xpro
  */
-public class user {
+public class User {
     private int id;
     private String full_name;
     private String user_name;
@@ -17,7 +17,7 @@ public class user {
     private String password;
     private boolean is_admin;
 
-    public user() {
+    public User() {
     }
 
     public int getId() {

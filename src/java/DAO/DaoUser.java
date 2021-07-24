@@ -1,7 +1,7 @@
 
 package DAO;
 
-import MODEL.user;
+import MODEL.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +13,7 @@ import java.util.List;
 
 public class DaoUser extends DbConnector{
     
-    public static void create(user user)
+    public static void create(User user)
     {
         String sql = "INSERT INTO users (full_name, user_name, email, password, is_admin) VALUES (?, ?, ?, ?, ?)";
         Connection connection = DbConnector.getDbConnection();
@@ -38,20 +38,20 @@ public class DaoUser extends DbConnector{
     }   
     
     
-    public static List<user> getAll()
+    public static List<User> getAll()
     {
-        List<user> users = new ArrayList<user>();
+        List<User> users = new ArrayList<User>();
         String sql = "SELECT * FROM users ;";
         Connection connection = DbConnector.getDbConnection();
         Statement statement;
         ResultSet resultSet;
-        user user;
+        User user;
         try {
             statement = connection.createStatement();
             resultSet = statement.executeQuery(sql);
             while (resultSet.next()) 
             {
-                user = new user();
+                user = new User();
                 user.setId(resultSet.getInt("id"));
                  user.setFull_name(resultSet.getString("full_name"));
                 user.setUser_name(resultSet.getString("user_name"));
@@ -68,11 +68,11 @@ public class DaoUser extends DbConnector{
     
     }
  
-    public static user getuser(int iduser) {
+    public static User getuser(int iduser) {
         String sql = "SELECT * FROM users WHERE id = ?";
         Connection connection = DbConnector.getDbConnection();
         ResultSet resultSet;
-        user user = new user();
+        User user = new User();
         try {
              PreparedStatement Pst= connection.prepareStatement(sql);
             Pst.setInt(1, iduser);
@@ -98,7 +98,7 @@ public class DaoUser extends DbConnector{
     }
 
 
-    public static void updateUser(user user) {
+    public static void updateUser(User user) {
      String sql = " UPDATE user set  full_name=?, user_name=?, email=?, password=?, is_admin=? WHERE id =?";
         Connection connection = DbConnector.getDbConnection();
         PreparedStatement Pstatement;
@@ -115,7 +115,7 @@ public class DaoUser extends DbConnector{
         }
     }
 
-    public static void deleteUser(user user) {
+    public static void deleteUser(User user) {
         String sql = "DELETE FROM users WHERE id = ?;";
         Connection connection = DbConnector.getDbConnection();
         PreparedStatement statement;
@@ -128,11 +128,11 @@ public class DaoUser extends DbConnector{
         }
     }
     
-    public static user checkAuth(String username, String passowrd) {
+    public static User checkAuth(String username, String passowrd) {
         String sql = "SELECT * FROM users WHERE user_name = ? AND password=?";
         Connection connection = DbConnector.getDbConnection();
         ResultSet resultSet;
-        user user = new user();
+        User user = new User();
         try {
             PreparedStatement Pst = connection.prepareStatement(sql);
             Pst.setString(1, username);
