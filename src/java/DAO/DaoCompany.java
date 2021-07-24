@@ -2,9 +2,6 @@
 package DAO;
 
 import MODEL.Company;
-import java.awt.Image;
-import java.io.InputStream;
-import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
