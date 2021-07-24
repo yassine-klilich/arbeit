@@ -12,7 +12,7 @@ package MODEL;
 public class User {
     private int id;
     private String full_name;
-    private String user_name;
+    private String user_name;  
     private String email;
     private String password;
     private boolean is_admin;
