@@ -32,7 +32,7 @@ public class loginServlet extends HttpServlet {
         else {
             HttpSession session = req.getSession();
             session.setAttribute("user", usr);
-            req.setAttribute("user",usr);
+            //req.setAttribute("user",usr);
             req.getRequestDispatcher("dashbord.jsp").forward(req,resp);
         }
     }

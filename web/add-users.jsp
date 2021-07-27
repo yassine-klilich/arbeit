@@ -4,7 +4,7 @@
     Author     : xpro
 --%>
 
-<%@page import="MODEL.user"%>
+<%@page import="MODEL.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -18,7 +18,7 @@
         <%
            
          Boolean password_mismatch = (Boolean) request.getAttribute("password_mismatch");
-         user user = (user) request.getAttribute("user");
+         User user = (User) request.getAttribute("user");
          String full_name = "";
          String user_name = "";
          String email = ""; 

@@ -3,11 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Yassine%20Klilich/Documents/NetBeansProjects/arbeit-j2ee/src/java/CONTROLEUR/loginServlet.java</file>
-            <file>file:/C:/Users/Yassine%20Klilich/Documents/NetBeansProjects/arbeit-j2ee/src/java/MODEL/User.java</file>
-            <file>file:/C:/Users/Yassine%20Klilich/Documents/NetBeansProjects/arbeit-j2ee/src/java/DAO/DaoUser.java</file>
-            <file>file:/C:/Users/Yassine%20Klilich/Documents/NetBeansProjects/arbeit-j2ee/web/dashbord.jsp</file>
-            <file>file:/C:/Users/Yassine%20Klilich/Documents/NetBeansProjects/arbeit-j2ee/src/java/CONTROLEUR/userServlet.java</file>
+            <file>file:/home/xpro/NetBeansProjects/arbeit-j2ee/src/java/DAO/DaoTask.java</file>
+            <file>file:/home/xpro/NetBeansProjects/arbeit-j2ee/src/java/CONTROLEUR/loginServlet.java</file>
+            <file>file:/home/xpro/NetBeansProjects/arbeit-j2ee/src/java/CONTROLEUR/companyServlet.java</file>
+            <file>file:/home/xpro/NetBeansProjects/arbeit-j2ee/src/java/MODEL/User.java</file>
         </group>
     </open-files>
 </project-private>

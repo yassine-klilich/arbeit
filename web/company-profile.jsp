@@ -206,7 +206,7 @@
                                             </div>
                                             <!-- profile title -->
                                             <div class="profile-title ml-3">
-                                                <h2 class="text-white">Nike</h2>
+                                                <h2 class="text-white"><%= c.getCompany_name() %></h2>
                                                 <p class="text-white">Sport cloths</p>
                                             </div>
                                         </div>
