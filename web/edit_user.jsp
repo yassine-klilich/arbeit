@@ -4,7 +4,7 @@
     Author     : xpro
 --%>
 
-<%@page import="MODEL.user"%>
+<%@page import="MODEL.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -15,7 +15,7 @@
     <body>
         <h1>Edit User</h1>
         <%
-         user user = (user) request.getAttribute("user");
+         User user = (User) request.getAttribute("user");
         %>
         <form method="POST" action="users?action=insert">
             <table>

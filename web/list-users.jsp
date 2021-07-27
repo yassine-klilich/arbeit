@@ -5,7 +5,7 @@
 --%>
 
 <%@page import="java.util.List"%>
-<%@page import="MODEL.user"%>
+<%@page import="MODEL.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -16,7 +16,7 @@
     <body>
         <h1>Hello World!</h1>
         <%
-            List<user> U = (List<user>)request.getAttribute("MaListe");
+            List<User> U = (List<User>)request.getAttribute("MaListe");
         %>
         <table border="1" width="300">
         <tr>
@@ -26,7 +26,7 @@
             <th>Is Admin</th>
             <th colspan="2">Action</th>
         </tr> 
-        <% for(user user:U){ %>
+        <% for(User user:U){ %>
         <tr>
             <td><%=user.getFull_name()%></td>
             <td><%=user.getUser_name()%></td>

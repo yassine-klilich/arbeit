@@ -10,9 +10,11 @@
 
 <%
     String userName = "";
+    boolean isadmin = false;
     if(session.getAttribute("user") != null) {
         User usr = (User)session.getAttribute("user");
         userName = usr.getUser_name();
+        isadmin = usr.getIs_admin();
     }
     else {
         response.sendRedirect("login");
@@ -27,6 +29,14 @@
     </head>
     <body>
         <h1>Bonjour <%=userName%></h1>
+        <%
+            if(isadmin==true){
+            
+            
+            %>
         <a href="/arbeit-j2ee/users?action=new">Add user</a>        
-    </body>
+        <%
+            }
+                %>
+                </body>
 </html>

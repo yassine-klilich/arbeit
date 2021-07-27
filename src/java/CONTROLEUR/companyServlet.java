@@ -144,7 +144,7 @@ private void Delete(HttpServletRequest request, HttpServletResponse response)
 		DaoCompany.deleteUser(company);
                 
                 
-		response.sendRedirect("/pfev1/compagnies?action=list");
+		response.sendRedirect("compagnies?action=list");
 //                RequestDispatcher dispatcher = request.getRequestDispatcher("Article.jsp");
 //                dispatcher.forward(request, response);
 	}
