@@ -104,7 +104,7 @@ public class TaskServlet extends HttpServlet {
 		DaoTask.deleteTask(task);
                 
                 
-		response.sendRedirect("/pfev1/tasks?action=list");
+		response.sendRedirect("tasks?action=list");
 	}
     
     private void Update(HttpServletRequest request, HttpServletResponse response) 

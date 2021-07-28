@@ -71,3 +71,66 @@ function isEmail(email) {
   var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
   return regex.test(email);
 }
+
+
+/*  validation forl add task */
+$( "#addtask" ).submit(function( event ) {
+  event.preventDefault();
+  i=0;
+   if(!$("#title").val()){
+      $("#title_error").text("please insert the task title");
+  }else{
+      i++;
+      $("#title_error").text("");
+  }
+  if(!$("#Description").val()){
+      $("#description_error").text("please insert the description of the task");
+  }else{
+      i++;
+      $("#description_error").text("");
+  }
+  
+  if(i===2){
+      $("#addtask")[0].submit();
+  }
+   
+  
+});
+
+
+/*  edit modal task */
+
+    $(document).on("click", "#edittaskbtn", function () {
+     var id = $(this).data('id');
+     var title = $(this).data('title');
+     var description = $(this).data('description');
+
+     $(".edittaskmodal #title").val( title );
+     $(".edittaskmodal #description").val( description );
+     $(".edittaskmodal #id").val( id );
+
+});
+
+/*  validate data edit task */
+$( "#edittask" ).submit(function( event ) {
+  event.preventDefault();
+  i=0;
+   if(!$("#edittask #title").val()){
+      $("#edittask #edittitle_error").text("please insert the task title");
+  }else{
+      i++;
+      $("#edittask #edittitle_error").text("");
+  }
+  if(!$("#edittask #description").val()){
+      $("#edittask #editdescription_error").text("please insert the description of the task");
+  }else{
+      i++;
+      $("#edittask #editdescription_error").text("");
+  }
+  
+  if(i===2){
+      $("#edittask")[0].submit();
+  }
+   
+  
+});

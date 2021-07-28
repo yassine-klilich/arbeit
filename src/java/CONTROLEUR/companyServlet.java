@@ -84,7 +84,8 @@ private void Store(HttpServletRequest request, HttpServletResponse response)
                 String contact_name = request.getParameter("contact_name");
                 
                 Part file = request.getPart("avatar");
-                String ImageName = file.getSubmittedFileName();
+                //String ImageName = file.getSubmittedFileName();
+                String ImageName = company_name;
                 String uploadPath = "/home/xpro/NetBeansProjects/arbeit-j2ee/web/images/"+ImageName;
                 try{
                 FileOutputStream fos = new FileOutputStream(uploadPath);
@@ -97,18 +98,7 @@ private void Store(HttpServletRequest request, HttpServletResponse response)
                 catch(Exception e){
                     e.printStackTrace();
                 }
-                  /* obtains the upload file part in this multipart request
-                  InputStream inputStream = null;
-                    Part avatar = request.getPart("avatar");
-                     if (avatar != null) {
-                    // debug messages
-                    System.out.println(avatar.getName());
-                    System.out.println(avatar.getSize());
-                    System.out.println(avatar.getContentType());
-
-                    // obtains input stream of the upload file
-                    inputStream = avatar.getInputStream(); 
-                }*/
+         
                 
         
                  
@@ -150,13 +140,29 @@ private void Delete(HttpServletRequest request, HttpServletResponse response)
 	}
 
 private void Update(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException {
+			throws SQLException, IOException, ServletException {
 		int  id = Integer.parseInt(request.getParameter("id"));
 		String company_name = request.getParameter("company_name");
                 String adresse = request.getParameter("adresse");
                 String telephone = request.getParameter("telephone");
                 String email = request.getParameter("email");
                 String contact_name = request.getParameter("contact_name");
+                
+                Part file = request.getPart("avatar");
+                //String ImageName = file.getSubmittedFileName();
+                String ImageName = company_name;
+                String uploadPath = "/home/xpro/NetBeansProjects/arbeit-j2ee/web/images/"+ImageName;
+                try{
+                FileOutputStream fos = new FileOutputStream(uploadPath);
+                InputStream is = file.getInputStream();
+                byte[] data = new byte[is.available()];
+                is.read(data);
+                fos.write(data);
+                fos.close();
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
 
 		Company company = new Company(); 
                 company.setId(id);
@@ -165,6 +171,7 @@ private void Update(HttpServletRequest request, HttpServletResponse response)
                 company.setTelephone(telephone);
                 company.setEmail(email);
                 company.setContact_name(contact_name);
+                company.setAvatar(ImageName);
                 DaoCompany.updateCompany(company);
 		response.sendRedirect("compagnies?action=list");
 	}

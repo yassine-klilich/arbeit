@@ -3,10 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/xpro/NetBeansProjects/arbeit-j2ee/src/java/DAO/DaoTask.java</file>
-            <file>file:/home/xpro/NetBeansProjects/arbeit-j2ee/src/java/CONTROLEUR/loginServlet.java</file>
+            <file>file:/home/xpro/NetBeansProjects/arbeit-j2ee/src/java/CONTROLEUR/TaskServlet.java</file>
+            <file>file:/home/xpro/NetBeansProjects/arbeit-j2ee/web/asset/myjs/main.js</file>
+            <file>file:/home/xpro/NetBeansProjects/arbeit-j2ee/web/company-profile.jsp</file>
             <file>file:/home/xpro/NetBeansProjects/arbeit-j2ee/src/java/CONTROLEUR/companyServlet.java</file>
-            <file>file:/home/xpro/NetBeansProjects/arbeit-j2ee/src/java/MODEL/User.java</file>
+            <file>file:/home/xpro/NetBeansProjects/arbeit-j2ee/web/tasks.jsp</file>
+            <file>file:/home/xpro/NetBeansProjects/arbeit-j2ee/nbproject/build-impl.xml</file>
+            <file>file:/home/xpro/NetBeansProjects/arbeit-j2ee/web/compagnies.jsp</file>
         </group>
     </open-files>
 </project-private>

@@ -53,3 +53,5 @@ $RECYCLE.BIN/
 
 /dist
 /nbproject/private
+/home/xpro/NetBeansProjects/arbeit-j2ee/nbproject
+nbproject/*
