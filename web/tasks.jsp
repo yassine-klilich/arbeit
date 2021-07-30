@@ -3,22 +3,21 @@
         color: red;
     }
     
-</style> 
+</style>   
 
 
-<%@page import="MODEL.Company"%>
+<%@page import="MODEL.Task"%>    
 <%@page import="java.util.List"%>
-        <%
-            List<Company> L = (List<Company>)request.getAttribute("compagnies");
-        %>
+<%
+    List<Task> tasks = (List<Task>)request.getAttribute("tasks");
+%>
 
-        
 
 <!DOCTYPE html>
 <html class="loading dark-layout" lang="en" data-layout="dark-layout" data-textdirection="ltr">
 <!-- BEGIN: Head-->
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta name="description"
@@ -52,7 +51,6 @@
     <!-- BEGIN: Custom CSS-->
     <link rel="stylesheet" type="text/css" href="asset/assets/css/style.css">
     <!-- END: Custom CSS-->
-
 </head>
 <!-- END: Head-->
 
@@ -79,7 +77,7 @@
                 <div class="user-nav d-sm-flex d-none"><span
                         class="user-name font-weight-bolder">Said Ourhou</span><span class="user-status">Admin</span>
                 </div>
-                <span class="avatar"><img class="round" src="asset/app-assets/images/portrait/small/avatar-s-11.jpg"
+                <span class="avatar"><img class="round" src="../app-assets/images/portrait/small/avatar-s-11.jpg"
                                           alt="avatar" height="40" width="40"><span class="avatar-status-online"></span></span>
             </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-user">
@@ -100,7 +98,7 @@
     <div class="navbar-header">
         <ul class="nav navbar-nav flex-row">
             <li class="nav-item mr-auto"><a class="navbar-brand"
-                                            href="asset/asset/asset/html/ltr/vertical-menu-template-dark/index.html"><span
+                                            href="../../../html/ltr/vertical-menu-template-dark/index.html"><span
                     class="brand-logo">
                             <svg viewbox="0 0 139 95" version="1.1" xmlns="http://www.w3.org/2000/svg"
                                  xmlns:xlink="http://www.w3.org/1999/xlink" height="24">
@@ -196,13 +194,11 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">Companies</h4>
+                            <h4 class="card-title">Tasks</h4>
                             <div class="dt-buttons btn-group flex-wrap">
                                 <button class="btn add-new btn-primary mt-50" tabindex="0"
                                         aria-controls="DataTables_Table_0" type="button" data-toggle="modal"
-                                        data-target="#newCompany">
-                                    <span>Add New Company</span>
-                                </button>
+                                        data-target="#newTask"><span>Add New Task</span></button>
                             </div>
                         </div>
                         <div class="card-body">
@@ -217,27 +213,21 @@
                                 <thead>
                                 <tr>
                                     <th>Id</th>
-                                    <th>Company Name</th>
-                                    <th>Address</th>
-                                    <th>Telephone</th>
-                                    <th>Email</th>
-                                    <th>Contact Name</th>
+                                    <th>Title</th>
+                                    <th>Description</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    <% for(Company company:L){ %>
+                                    <% for(Task task:tasks){ %>
                                 <tr>
                                     <td>
-                                        <a href="compagnies?action=show&id=<%=company.getId()%>"><span class="font-weight-bold"><%=company.getId()%></span></a>
+                                        <span class="font-weight-bold"><%= task.getId()%></span>
                                     </td>
-                                    <td><%=company.getCompany_name()%></td>
+                                    <td><%= task.getTitle() %></td>
                                     <td>
-                                        <%=company.getAdresse() %>
+                                        <%= task.getDescription() %>
                                     </td>
-                                    <td><%=company.getTelephone() %></td>
-                                    <td><%= company.getEmail() %></td>
-                                    <td><%= company.getContact_name() %></td>
                                     <td>
                                         <div class="dropdown">
                                             <button type="button"
@@ -253,15 +243,13 @@
                                                 </svg>
                                             </button>
                                             <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="javascript:void(0);"
-                                                   data-toggle="modal"
-                                                   data-target="#editCompany" id="editbtn" 
-                                                    data-id="<%=company.getId() %>"
-                                                    data-name="<%=company.getCompany_name() %>"
-                                                    data-adresse="<%=company.getAdresse() %>"
-                                                    data-telephone="<%=company.getTelephone() %>" 
-                                                    data-email="<%=company.getEmail() %>"
-                                                    data-contact="<%=company.getContact_name()%>">
+                                                <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal"
+                                                   data-target="#editTask"
+                                                   id="edittaskbtn"
+                                                   data-id="<%= task.getId() %>"
+                                                   data-title="<%= task.getTitle() %>"
+                                                   data-description="<%= task.getDescription() %>"
+                                                   >
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
                                                          viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                          stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -270,16 +258,15 @@
                                                     </svg>
                                                     <span>Edit</span>
                                                 </a>
-                                                <a class="dropdown-item"  href="compagnies?action=delete&id=<%=company.getId()%>" id="confirm-text">
-                                                   
+                                                <a class="dropdown-item" href="tasks?action=delete&id=<%= task.getId() %>" id="confirm-text">
+                                                    
                                                     <span>Delete</span>
                                                 </a>
                                             </div>
                                         </div>
-                                                <a href="compagnies.jsp"></a>
                                     </td>
                                 </tr>
-                                <%}%>
+                                <%} %>
                                 </tbody>
                             </table>
                         </div>
@@ -290,113 +277,75 @@
     </div>
 </div>
 <!-- END: Content-->
-<!-- Add company Modal -->
-<div class="modal fade text-left" id="newCompany" tabindex="-1" role="dialog" aria-labelledby=""
+
+<!-- Add task Modal -->
+<div class="modal fade text-left" id="newTask" tabindex="-1" role="dialog" aria-labelledby=""
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel18">Add New Company</h4>
+                <h4 class="modal-title" id="myModalLabel18">Add New Task</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form action="compagnies?action=insert" method="POST" id="addcompanyform" enctype="multipart/form-data">
+                <form action="tasks?action=insert" method="post" id="addtask">
                 <div class="form-group">
-                    <label for="companyName">Company Name</label>
-                    <input type="text" class="form-control" id="companyName"  name="company_name"  placeholder="Company Name">
-                    <span id="name_error" class="error"> </span>
+                    <label for="title">Title</label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="Title">
+                    <span id="title_error" class="error"></span>
                 </div>
                 <div class="form-group">
-                    <label for="Address">Address</label>
-                    <textarea type="text" class="form-control" id="Address" name="adresse" placeholder="Address"></textarea>
-                    <span id="address_error" class="error"> </span>
+                    <label for="Description">Description</label>
+                    <textarea type="text" class="form-control" id="Description" name="description" placeholder="Description"></textarea>
+                    <span id="description_error" class="error"></span>
                 </div>
-                <div class="form-group">
-                    <label for="Telephone">Telephone</label>
-                    <input type="text" class="form-control" id="Telephone" name="telephone" placeholder="Telephone">
-                    <span id="telephone_error" class="error"> </span>
-                </div>
-                <div class="form-group">
-                    <label for="Email">Email</label>
-                    <input type="text" class="form-control" id="Email" name="email" placeholder="Email">
-                    <span id="email_error" class="error"> </span>
-                </div>
-                <div class="form-group">
-                    <label for="ContactName">Contact Name</label>
-                    <input type="text" class="form-control" id="ContactName" name="contact_name" placeholder="Contact Name">
-                    <span id="contact_error" class="error"> </span>
-                </div>
-                    
-                <div class="form-group">
-                    <label for="ContactName">Avatar</label>
-                    <input type="file" class="form-control" id="avatar" name="avatar">
-                    <span id="avatar_error" class="avatar"> </span>
-                </div>
-                    <div class="modal-footer">
-                <input type="submit" class="btn btn-primary" value="Add">
-            </div>
+            
+        
+            <input type="submit" class="btn btn-primary"  value="Add">
+     
             </form>
-            </div>
+                </div>
             
         </div>
     </div>
 </div>
 
-<!-- Edit company Modal -->
-<div class="modal fade text-left" id="editCompany" tabindex="-1" role="dialog" aria-labelledby=""
+<!-- Edit task Modal -->
+<div class="modal fade text-left" id="editTask" tabindex="-1" role="dialog" aria-labelledby=""
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel18">Edit Company</h4>
+                <h4 class="modal-title" id="myModalLabel18">Edit Task</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="compagnies?action=update" method="POST" enctype="multipart/form-data">
-            <div class="modal-body editmodal">
-                <div class="form-group">
-                    <label for="companyName">Company Name</label>
-                    <input type="text" class="form-control" id="companyName" name="company_name" placeholder="Company Name">
+            
+            <div class="modal-body edittaskmodal">
+                <form action="tasks?action=update"  method="post" id="edittask" >
+                <div class="form-group " >
+                    <label for="editFullName">title</label>
+                    <input type="text" class="form-control" name="title" id="title" >
+                    <span id="edittitle_error" class="error"> </span>
                 </div>
                 <div class="form-group">
-                    <label for="Address">Address</label>
-                    <textarea type="text" class="form-control" id="Address" name="adresse" placeholder="Address"></textarea>
+                    <label for="editUserName">Description</label>
+                    <input type="text" class="form-control" name="description" id="description">
+                    <span id="editdescription_error" class="error"> </span>
                 </div>
-                <div class="form-group">
-                    <label for="Telephone">Telephone</label>
-                    <input type="text" class="form-control" id="Telephone" name="telephone" placeholder="Telephone">
-                </div>
-                <div class="form-group">
-                    <label for="Email">Email</label>
-                    <input type="text" class="form-control" id="Email" name="email" placeholder="Email">
-                </div>
-                <div class="form-group">
-                    <label for="ContactName">Contact Name</label>
-                    <input type="text" class="form-control" id="ContactName"  name="contact_name" placeholder="Contact Name">
-                </div>
+                    
+                    <input  name="id" id="id" name="id" hidden="true">
                 
-                <div class="form-group">
-                    <label for="ContactName">Avatar</label>
-                    <input type="file" class="form-control" id="avatar" name="avatar" >
-                    <span id="avatar_error" class="avatar"> </span>
-                </div>
-                <div class="form-group">
-                    <input name="id" id="id" hidden="true">
-                </div>
-                
-             
-                 <div class="modal-footer">
-                <input type="submit" class="btn btn-primary" value="Edit">
-            </div>
-            </div>
+                    <input type="submit" class="btn btn-primary" value="Edit" >
                 </form>
-           
+            </div>
         </div>
     </div>
 </div>
+
 
 <div class="sidenav-overlay"></div>
 <div class="drag-target"></div>
@@ -429,6 +378,16 @@
 <!-- END: Page JS-->
 <script src="asset/myjs/main.js"></script>
 
+<script>
+    $(window).on('load', function () {
+        if (feather) {
+            feather.replace({
+                width: 14,
+                height: 14
+            });
+        }
+    })
+</script>
 </body>
 <!-- END: Body-->
 

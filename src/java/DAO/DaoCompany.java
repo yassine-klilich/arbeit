@@ -97,7 +97,7 @@ public static Company getCompany(int idcompany) {
     }
 
 public static void updateCompany(Company company) {
-     String sql = " UPDATE companies set  company_name=?, adresse=?, telephone=?, email=?, contact_name=? WHERE id=?";
+     String sql = " UPDATE companies set  company_name=?, adresse=?, telephone=?, email=?, avatar=?, contact_name=? WHERE id=?";
         Connection connection = DbConnector.getDbConnection();
         PreparedStatement Pst;
         try {
@@ -106,8 +106,9 @@ public static void updateCompany(Company company) {
             Pst.setString(2, company.getAdresse());
             Pst.setString(3, company.getTelephone());
             Pst.setString(4, company.getEmail());
-            Pst.setString(5, company.getContact_name());
-            Pst.setInt(6, company.getId());
+            Pst.setString(5, company.getAvatar());
+            Pst.setString(6, company.getContact_name());
+            Pst.setInt(7, company.getId());
             Pst.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
