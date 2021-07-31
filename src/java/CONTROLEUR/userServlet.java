@@ -140,13 +140,12 @@ private void updateUser(HttpServletRequest request, HttpServletResponse response
 		response.sendRedirect("userServlet?action=list");
 	}
 
-private void listUser(HttpServletRequest request, HttpServletResponse response)
-			throws SQLException, IOException, ServletException {
-     List<User> listuser = DaoUser.getAll();
-		request.setAttribute("MaListe", listuser);
-                RequestDispatcher dispatcher = request.getRequestDispatcher("list-users.jsp");
-                dispatcher.forward(request, response);
-	}
+    private void listUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
+        List<User> listuser = DaoUser.getAll();
+        request.setAttribute("dataUsers", listuser);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("users.jsp");
+        dispatcher.forward(request, response);
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -159,5 +158,5 @@ private void listUser(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
-
+    
 }
