@@ -52,4 +52,6 @@ $RECYCLE.BIN/
 .springBeans
 
 /dist
-/nbproject/*
+/nbproject/private
+/home/xpro/NetBeansProjects/arbeit-j2ee/nbproject
+nbproject/*
