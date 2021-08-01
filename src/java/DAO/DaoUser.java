@@ -13,19 +13,26 @@ import java.util.List;
 
 public class DaoUser extends DbConnector{
     
-    public static void create(User user)
+    public static User create(User user)
     {
         String sql = "INSERT INTO users (full_name, user_name, email, password, is_admin) VALUES (?, ?, ?, ?, ?)";
         Connection connection = DbConnector.getDbConnection();
          
         try 
-        {   PreparedStatement Pst= connection.prepareStatement(sql);
+        {   PreparedStatement Pst= connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             Pst.setString(1, user.getFull_name());
             Pst.setString(2, user.getUser_name());
             Pst.setString(3, user.getEmail());
             Pst.setString(4, user.getPassword());
             Pst.setBoolean(5, user.getIs_admin());
             Pst.executeUpdate();
+            
+            ResultSet rs = Pst.getGeneratedKeys();
+            if (rs.next()) {
+               int id = rs.getInt(1);
+               user.setId(id);
+               return user;
+            }
             System.out.println("Added sucess");
         } 
         catch (SQLException e) 
@@ -34,7 +41,7 @@ public class DaoUser extends DbConnector{
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
-    
+        return null;
     }   
     
     
@@ -72,7 +79,7 @@ public class DaoUser extends DbConnector{
         String sql = "SELECT * FROM users WHERE id = ?";
         Connection connection = DbConnector.getDbConnection();
         ResultSet resultSet;
-        User user = new User();
+        User user = null;
         try {
              PreparedStatement Pst= connection.prepareStatement(sql);
             Pst.setInt(1, iduser);
@@ -80,6 +87,7 @@ public class DaoUser extends DbConnector{
             if (resultSet.first()==true)
             {
                 System.out.println(" user found ");
+                user = new User();
                 user.setId(resultSet.getInt("id"));
                 user.setFull_name(resultSet.getString("full_name"));
                 user.setUser_name(resultSet.getString("user_name"));
@@ -115,13 +123,13 @@ public class DaoUser extends DbConnector{
         }
     }
 
-    public static void deleteUser(User user) {
+    public static void deleteUser(int id) {
         String sql = "DELETE FROM users WHERE id = ?;";
         Connection connection = DbConnector.getDbConnection();
         PreparedStatement statement;
         try {
             statement = connection.prepareStatement(sql);
-            statement.setInt(1, user.getId());
+            statement.setInt(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

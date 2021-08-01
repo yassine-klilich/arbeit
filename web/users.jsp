@@ -10,14 +10,13 @@
 <%@page import="java.util.List"%>
 <%
     String userName = "";
-    boolean isadmin = false;
-    List<User> dataUsers = (List<User>)request.getAttribute("dataUsers");
+    boolean isAdmin = false;
     if(session.getAttribute("user") != null) {
         User usr = (User)session.getAttribute("user");
         userName = usr.getUser_name();
-        isadmin = usr.getIs_admin();
+        isAdmin = usr.getIs_admin();
     }
-    else {
+    if(session.getAttribute("user") == null || isAdmin == false) {
         response.sendRedirect("login");
     }
 %>
@@ -94,13 +93,13 @@
                         <div class="card-header">
                             <h4 class="card-title">Users</h4>
                             <div class="dt-buttons btn-group flex-wrap">
-                                <button class="btn add-new btn-primary mt-50" tabindex="0" aria-controls="DataTables_Table_0" type="button" data-toggle="modal" data-target="#newUser">
+                                <button class="btn add-new btn-primary mt-50" tabindex="0" aria-controls="DataTables_Table_0" type="button" onclick="openModalFormUser('add')">
                                     <span>Add New User</span>
                                 </button>
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <table class="table">
+                            <table id="users-table" class="table">
                                 <thead>
                                 <tr>
                                     <th>Full Name</th>
@@ -110,47 +109,7 @@
                                     <th>Action</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                    <% for(User user : dataUsers){ %>
-                                        <tr>
-                                            <td><%=user.getFull_name()%></td>
-                                            <td><%=user.getUser_name()%></td>
-                                            <td><%=user.getEmail()%></td>
-                                            <td><%=user.getIs_admin()%></td>
-                                            <td>
-                                                <div class="dropdown">
-                                                    <button type="button" class="btn btn-sm dropdown-toggle hide-arrow waves-effect waves-float waves-light" data-toggle="dropdown">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                                             viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                             class="feather feather-more-vertical">
-                                                            <circle cx="12" cy="12" r="1"></circle>
-                                                            <circle cx="12" cy="5" r="1"></circle>
-                                                            <circle cx="12" cy="19" r="1"></circle>
-                                                        </svg>
-                                                    </button>
-                                                    <div class="dropdown-menu">
-                                                        <a class="dropdown-item" href="javascript:void(0);"
-                                                           data-toggle="modal"
-                                                           data-target="#editCompany" id="editbtn" 
-                                                            >
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                                 class="feather feather-edit-2 mr-50">
-                                                                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
-                                                            </svg>
-                                                            <span>Edit</span>
-                                                        </a>
-                                                        <a class="dropdown-item"  id="confirm-text">
-                                                            <span>Delete</span>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    <%}%>
-                                </tbody>
+                                <tbody></tbody>
                             </table>
                         </div>
                     </div>
@@ -162,63 +121,47 @@
 <!-- END: Content-->
 
 <!-- Add user Modal -->
-<div class="modal fade text-left" id="newUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel18" aria-hidden="true">
+<div class="modal fade text-left" id="modalFormUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel18" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel18">Add New User</h4>
+                <h4 class="modal-title" id="modalFormUserHeading">Add New User</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="fullName">Full Name</label>
-                    <input type="text" class="form-control" id="fullName" placeholder="Full Name">
+            <form method="POST" id="formAddUser" class="needs-validation">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" class="form-control" name="fullName" id="fullName" placeholder="Full Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="UserName">UserName</label>
+                        <input type="text" class="form-control" name="username" id="UserName" placeholder="Username">
+                    </div>
+                    <div class="form-group">
+                        <label for="Email">Email</label>
+                        <input type="email" class="form-control" name="email" id="Email" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="isAdmin" id="isAmin">
+                        <label class="form-check-label" for="isAmin">Admin</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="ContactName">Avatar</label>
+                        <input type="file" class="form-control" name="avatar" id="avatar" accept="image/png, image/jpeg, image/jpg">
+                        <span id="avatar_error" class="avatar"></span>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="UserName">UserName</label>
-                    <input type="text" class="form-control" id="UserName" placeholder="UserName">
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
-                <div class="form-group">
-                    <label for="Email">UserName</label>
-                    <input type="text" class="form-control" id="Email" placeholder="Email">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Add</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Edit user Modal -->
-<div class="modal fade text-left" id="editUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel18" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel18">Edit User</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="editFullName">Full Name</label>
-                    <input type="text" class="form-control" id="editFullName" placeholder="Full Name">
-                </div>
-                <div class="form-group">
-                    <label for="editUserName">UserName</label>
-                    <input type="text" class="form-control" id="editUserName" placeholder="UserName">
-                </div>
-                <div class="form-group">
-                    <label for="editEmail">UserName</label>
-                    <input type="text" class="form-control" id="editEmail" placeholder="Email">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Edit</button>
-            </div>
+            </form>
         </div>
     </div>
 </div>
@@ -251,6 +194,8 @@
 
 <!-- BEGIN: Page JS-->
 <script src="asset/app-assets/js/scripts/extensions/ext-component-sweet-alerts.js"></script>
+<script src="assets/js/xhr.js"></script>
+<script src="assets/js/users.js"></script>
 <!-- END: Page JS-->
 
 <script>

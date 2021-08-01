@@ -86,7 +86,7 @@ private void Store(HttpServletRequest request, HttpServletResponse response)
                 Part file = request.getPart("avatar");
                 //String ImageName = file.getSubmittedFileName();
                 String ImageName = company_name;
-                String uploadPath = "/home/xpro/NetBeansProjects/arbeit-j2ee/web/images/"+ImageName;
+                String uploadPath = "C:\\Users\\Yassine Klilich\\Documents\\NetBeansProjects\\arbeit-j2ee\\web\\images\\"+ImageName;
                 try{
                 FileOutputStream fos = new FileOutputStream(uploadPath);
                 InputStream is = file.getInputStream();
