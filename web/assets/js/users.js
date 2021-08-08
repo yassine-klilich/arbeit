@@ -1,5 +1,10 @@
 
-let modalFormUser;
+const SUBMIT_MODE = Object.freeze({
+    ADD: "add",
+    EDIT: "edit"
+});
+let submitMode = SUBMIT_MODE.ADD;
+let modalFormUser, userToEdit;
 window.addEventListener("load", function(){
     loadUsersDataTable();
     initUserFormSubmit();
@@ -36,10 +41,7 @@ function loadUsersDataTable() {
                             </svg>
                         </button>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="javascript:void(0);"
-                               data-form-mode="edit"
-                               onclick="openModalFormUser('edit')"
-                                >
+                            <a id="edit-btn" class="dropdown-item" href="javascript:void(0);">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
                                      viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -59,20 +61,33 @@ function loadUsersDataTable() {
                     </div>
                 </td>
             `;
+            const editBtn = trElement.querySelector("#edit-btn");
+            editBtn.addEventListener("click", openModalFormUser.bind(editBtn, SUBMIT_MODE.EDIT, item));
             tbody.appendChild(trElement);
         }
     });
 }
 
-function openModalFormUser(formMode) {
+function openModalFormUser(mode, userData) {
+    const formUser = document.getElementById("formUser");
+    formUser.reset();
     const modalFormUserHeading = document.getElementById("modalFormUserHeading");
-    switch (formMode) {
-        case 'add': {
+    submitMode = mode;
+    userToEdit = userData;
+    switch (submitMode) {
+        case SUBMIT_MODE.ADD: {
             modalFormUserHeading.textContent = "Add User";
         } break;
-        
-        case 'edit': {
+        case SUBMIT_MODE.EDIT: {
             modalFormUserHeading.textContent = "Edit User";
+            const fullName = formUser.elements["fullName"];
+            const username = formUser.elements["username"];
+            const email = formUser.elements["email"];
+            const isAdmin = formUser.elements["isAdmin"];
+            fullName.value = userData.full_name;
+            username.value = userData.user_name;
+            email.value = userData.email;
+            isAdmin.checked = userData.is_admin;
         } break;
     }
     modalFormUser.show();
@@ -109,17 +124,17 @@ function deleteUser(userId) {
 }
 
 function initUserFormSubmit() {
-    const formAddUser = document.getElementById("formAddUser");
-    const fullName = formAddUser.elements["fullName"];
-    const username = formAddUser.elements["username"];
-    const email = formAddUser.elements["email"];
-    const password = formAddUser.elements["password"];
-    const isAdmin = formAddUser.elements["isAdmin"];
+    const formUser = document.getElementById("formUser");
+    const fullName = formUser.elements["fullName"];
+    const username = formUser.elements["username"];
+    const email = formUser.elements["email"];
+    const password = formUser.elements["password"];
+    const isAdmin = formUser.elements["isAdmin"];
     fullName.addEventListener("input", validateFullNameInput);
     username.addEventListener("input", validateUsernameInput);
     email.addEventListener("input", validateEmailInput);
     password.addEventListener("input", validatePasswordInput);
-    formAddUser.addEventListener("submit", formAddUserSubmit);
+    formUser.addEventListener("submit", formAddUserSubmit);
 }
 
 function formAddUserSubmit(event) {
@@ -131,23 +146,42 @@ function formAddUserSubmit(event) {
     const isAdmin = this.elements["isAdmin"];
     const isValid = validateFullNameInput() & validateUsernameInput() & validateEmailInput() & validatePasswordInput();
     if(isValid == 1) {
-        XHR_CALL.postUser({
-            full_name: fullName.value,
-            user_name: username.value,
-            email: email.value,
-            password: password.value,
-            is_admin: isAdmin.checked
-        })
-        .then(() => {
-            loadUsersDataTable();
-            modalFormUser.hide();
-        });
+        switch (submitMode) {
+            case SUBMIT_MODE.ADD: {
+                XHR_CALL.postUser({
+                    full_name: fullName.value,
+                    user_name: username.value,
+                    email: email.value,
+                    password: password.value,
+                    is_admin: isAdmin.checked
+                })
+                .then(() => {
+                    loadUsersDataTable();
+                    modalFormUser.hide();
+                    userToEdit = null;
+                });
+            } break;
+            case SUBMIT_MODE.EDIT: {
+                XHR_CALL.putUser(userToEdit.id, {
+                    full_name: fullName.value,
+                    user_name: username.value,
+                    email: email.value,
+                    password: password.value,
+                    is_admin: isAdmin.checked
+                })
+                .then(() => {
+                    loadUsersDataTable();
+                    modalFormUser.hide();
+                    userToEdit = null;
+                });
+            } break;
+        }
     }
 }
 
 function validateFullNameInput() {
-    const formAddUser = document.getElementById("formAddUser");
-    const fullName = formAddUser.elements["fullName"];
+    const formUser = document.getElementById("formUser");
+    const fullName = formUser.elements["fullName"];
     fullName.classList.remove("is-invalid");
     if(fullName.value == null || fullName.value.trim() == "") {
         fullName.classList.add("is-invalid");
@@ -157,8 +191,8 @@ function validateFullNameInput() {
 }
 
 function validateUsernameInput() {
-    const formAddUser = document.getElementById("formAddUser");
-    const username = formAddUser.elements["username"];
+    const formUser = document.getElementById("formUser");
+    const username = formUser.elements["username"];
     username.classList.remove("is-invalid");
     if(username.value == null || username.value.trim() == "") {
         username.classList.add("is-invalid");
@@ -168,8 +202,8 @@ function validateUsernameInput() {
 }
 
 function validateEmailInput() {
-    const formAddUser = document.getElementById("formAddUser");
-    const email = formAddUser.elements["email"];
+    const formUser = document.getElementById("formUser");
+    const email = formUser.elements["email"];
     email.classList.remove("is-invalid");
     if(email.value == null || email.value.trim() == "") {
         email.classList.add("is-invalid");
@@ -179,8 +213,8 @@ function validateEmailInput() {
 }
 
 function validatePasswordInput() {
-    const formAddUser = document.getElementById("formAddUser");
-    const password = formAddUser.elements["password"];
+    const formUser = document.getElementById("formUser");
+    const password = formUser.elements["password"];
     password.classList.remove("is-invalid");
     if(password.value == null || password.value.trim() == "") {
         password.classList.add("is-invalid");

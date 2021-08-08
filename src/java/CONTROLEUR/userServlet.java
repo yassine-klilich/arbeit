@@ -190,8 +190,21 @@ public class userServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String userId = request.getParameter("id");
+        final String strBody = Utility.convertStreamToString(request.getInputStream());
+        User user = this.gson.fromJson(strBody, User.class);
+        user.setId(Integer.parseInt(userId));
+        user = DaoUser.updateUser(user);
+        String jsonResponse = "";
+        if(user != null) {
+            jsonResponse = this.gson.toJson(user);
+        }
+        PrintWriter out = response.getWriter();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        out.print(jsonResponse);
+        out.flush();
     }
     
 }

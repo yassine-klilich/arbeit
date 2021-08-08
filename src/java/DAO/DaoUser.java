@@ -106,8 +106,8 @@ public class DaoUser extends DbConnector{
     }
 
 
-    public static void updateUser(User user) {
-     String sql = " UPDATE user set  full_name=?, user_name=?, email=?, password=?, is_admin=? WHERE id =?";
+    public static User updateUser(User user) {
+     String sql = " UPDATE users set  full_name=?, user_name=?, email=?, password=?, is_admin=? WHERE id =?";
         Connection connection = DbConnector.getDbConnection();
         PreparedStatement Pstatement;
         try {
@@ -117,10 +117,12 @@ public class DaoUser extends DbConnector{
             Pstatement.setString(3, user.getEmail());
             Pstatement.setString(4, user.getPassword());
             Pstatement.setBoolean(5, user.getIs_admin());
+            Pstatement.setInt(6, user.getId());
             Pstatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return getuser(user.getId());
     }
 
     public static void deleteUser(int id) {
