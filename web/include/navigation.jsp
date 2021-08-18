@@ -72,14 +72,14 @@
                 </a>
             </li>
             <li class="nav-item <%=(activeNav.equals("interventions"))?"active":""%>">
-                <a class="d-flex align-items-center" <%=(activeNav.equals("home"))?"":" href='home.jsp'"%>">
+                <a class="d-flex align-items-center" <%=(activeNav.equals("interventions"))?"":" href='interventions.jsp'"%>">
                     <i data-feather="circle"></i>
                     <span class="menu-title text-truncate" data-i18n="Todo">Interventions</span>
                 </a>
             </li>
             </li>
             <li class="nav-item <%=(activeNav.equals("tasks"))?"active":""%>">
-                <a class="d-flex align-items-center" <%=(activeNav.equals("home"))?"":" href='home.jsp'"%>">
+                <a class="d-flex align-items-center" <%=(activeNav.equals("tasks"))?"":" href='tasks.jsp'"%>">
                     <i data-feather="circle"></i>
                     <span class="menu-title text-truncate" data-i18n="Calendar">Tasks</span>
                 </a>

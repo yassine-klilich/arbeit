@@ -13,10 +13,10 @@ import java.util.List;
  */
 public class Intervention {
     private int id;
-    private int user_id;
-    private int company_id;
-    private String start_hour;
-    private String end_hour;
+    private int userId;
+    private int companyId;
+    private String starthour;
+    private String endhour;
     private String date;
     private List<Task> tasks;
 
@@ -30,38 +30,37 @@ public class Intervention {
     public void setId(int id) {
         this.id = id;
     }
-    
 
-    public int getUser_id() {
-        return user_id;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    public int getCompany_id() {
-        return company_id;
+    public int getCompanyId() {
+        return companyId;
     }
 
-    public void setCompany_id(int company_id) {
-        this.company_id = company_id;
+    public void setCompanyId(int company) {
+        this.companyId = company;
     }
 
-    public String getStart_hour() {
-        return start_hour;
+    public String getStarthour() {
+        return starthour;
     }
 
-    public void setStart_hour(String start_hour) {
-        this.start_hour = start_hour;
+    public void setStarthour(String starthour) {
+        this.starthour = starthour;
     }
 
-    public String getEnd_hour() {
-        return end_hour;
+    public String getEndhour() {
+        return endhour;
     }
 
-    public void setEnd_hour(String end_hour) {
-        this.end_hour = end_hour;
+    public void setEndhour(String endhour) {
+        this.endhour = endhour;
     }
 
     public String getDate() {
@@ -79,6 +78,8 @@ public class Intervention {
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
     }
+
+   
     
     
     

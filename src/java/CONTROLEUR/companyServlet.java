@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import javax.servlet.annotation.MultipartConfig;
 
-@WebServlet(name = "companyServlet", urlPatterns = {"/compagnies"})
+@WebServlet(name = "companyServlet", urlPatterns = {"/companies"})
 @MultipartConfig(maxFileSize = 16177215) // upload file up to 16MB
 
 public class companyServlet extends HttpServlet {

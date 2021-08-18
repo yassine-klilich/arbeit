@@ -6,7 +6,6 @@
 package CONTROLEUR;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,123 +14,83 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import MODEL.Task;
 import DAO.DaoTask;
-import javax.servlet.RequestDispatcher;
+import com.google.gson.Gson;
+import java.io.PrintWriter;
+import services.Utility;
 
-/**
- *
- * @author xpro
- */
 @WebServlet(name = "TaskServlet", urlPatterns = {"/tasks"})
 public class TaskServlet extends HttpServlet {
+    private Gson gson = new Gson();
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String action = request.getParameter("action");
-             
-         try {
-            switch (action)
-            {
-                 
-                 case "list":
-                     this.Index(request, response);
-                    break;
-                 case "insert":
-		    this.Store(request, response);
-                    break;
-                case "delete":
-                    this.Delete(request, response);
-                    break;
-                case "update":
-                    this.Update(request, response);
-                    break;
-               
-            }
-        }
-        catch (Exception ex)
-        {
-            throw new ServletException(ex);
-        }
-        
-        
 
-    }
-    
-   private void Index(HttpServletRequest request, HttpServletResponse response)
-			throws SQLException, IOException, ServletException {
-     List<Task> tasks = DaoTask.getAll();
-		request.setAttribute("tasks", tasks);
-                RequestDispatcher dispatcher = request.getRequestDispatcher("tasks.jsp");
-                dispatcher.forward(request, response);
-	}
-   
-    private void Store(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException,ServletException {
-    
- 
-		String title = request.getParameter("title");
-                String description = request.getParameter("description");
-
-                Task task = new Task();
-                task.setTitle(title);
-                task.setDescription(description);
-                DaoTask.create(task); 
-                List<Task> tasks = DaoTask.getAll();
-		request.setAttribute("tasks", tasks);
-                RequestDispatcher dispatcher = request.getRequestDispatcher("tasks.jsp");
-		dispatcher.forward(request, response);
-              
-
-	}
-    
-    
-    private void Delete(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException,ServletException {
-            
-            
-		int id = Integer.parseInt(request.getParameter("id"));
-                
-                Task task = DaoTask.getTask(id);
-                
-		DaoTask.deleteTask(task);
-                
-                
-		response.sendRedirect("tasks?action=list");
-	}
-    
-    private void Update(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException {
-		int  id = Integer.parseInt(request.getParameter("id"));
-		String title = request.getParameter("title");
-                String description = request.getParameter("description");
-                
-		Task task = new Task(); 
-                task.setId(id);
-                task.setTitle(title);
-                task.setDescription(description);
-                
-                DaoTask.updateTask(task);
-		response.sendRedirect("tasks?action=list");
-	}
     
       @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        
+                String taskId = request.getParameter("id");
+                String jsonResponse = "";
+                if(taskId != null) {
+                    Task task = DaoTask.getTask(Integer.parseInt(taskId));
+                    if(task == null) {
+                        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    }
+                    else {
+                        jsonResponse = this.gson.toJson(task);
+                    }
+                }
+                else {
+                    List<Task> listTask = DaoTask.getAll();
+                    jsonResponse = this.gson.toJson(listTask);
+                }
+                PrintWriter out = response.getWriter();
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                out.print(jsonResponse);
+                out.flush();
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        final String strBody = Utility.convertStreamToString(request.getInputStream());
+        Task task = this.gson.fromJson(strBody, Task.class);
+        task = DaoTask.create(task);
+        String jsonResponse = "";
+        if(task != null) {
+            jsonResponse = this.gson.toJson(task);
+        }
+        PrintWriter out = response.getWriter();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        out.print(jsonResponse);
+        out.flush();
+    }
+    
+        @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String taskId = req.getParameter("id");
+        if(taskId != null) {
+            DaoTask.deleteTask(Integer.parseInt(taskId));
+        }
+    }
+    
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String taskId = request.getParameter("id");
+        final String strBody = Utility.convertStreamToString(request.getInputStream());
+        Task task = this.gson.fromJson(strBody, Task.class);
+        task.setId(Integer.parseInt(taskId));
+        task = DaoTask.updateTask(task);
+        String jsonResponse = "";
+        if(task != null) {
+            jsonResponse = this.gson.toJson(task);
+        }
+        PrintWriter out = response.getWriter();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        out.print(jsonResponse);
+        out.flush();
     }
     
   
