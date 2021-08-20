@@ -5,12 +5,13 @@ const SUBMIT_MODE = Object.freeze({
     EDIT: "edit"
 });
 let submitMode = SUBMIT_MODE.ADD;
-let modalFormIntervention, interventionToEdit;
+let modalFormIntervention, interventionToEdit, startHourPickr;
 window.addEventListener("load", function(){
     loadInterventionsDataTable();
     initInterventionFormSubmit();
     modalFormIntervention = new bootstrap.Modal(document.getElementById('modalFormIntervention'));
-    
+//    startHourPickr = flatpickr("#startHour", {});
+    debugger;
 });
 
 function loadInterventionsDataTable() {
@@ -90,29 +91,17 @@ function openModalFormIntervention(mode, interventionData) {
     interventionToEdit = interventionData;
     switch (submitMode) {
         case SUBMIT_MODE.ADD: {
-            modalFormInterventionHeading.textContent = "Add Intervention";
-    XHR_CALL.getTasks()
-    .then(data => {
-        const selectTasks = document.getElementById("tasks");
-        for(let i = 0; i < data.length; i++) {
-            const item = data[i];
-            selectTasks.options[selectTasks.options.length] = new Option (item.title, item.id);
-
-        }
-    });
-                   
+            modalFormInterventionHeading.textContent = "Add Intervention";                  
         } break;
         case SUBMIT_MODE.EDIT: {
             modalFormInterventionHeading.textContent = "Edit Intervention";
             const date = formIntervention.elements["date"];
-            const userId = formIntervention.elements["userId"];
             const companyId = formIntervention.elements["companyId"];
-            const starthour = formIntervention.elements["userId"];
-            const endhour = formIntervention.elements["userId"];
+            const starthour = formIntervention.elements["starthour"];
+            const endhour = formIntervention.elements["endhour"];
             const tasks = formIntervention.elements["tasks"];
             
             date.value = interventionData.date;
-            userId.value = interventionData.userId;
             companyId.values = interventionData.companyId;
             starthour.value = interventionData.starthour;
             endhour.value = interventionData.endhour;
@@ -156,16 +145,14 @@ function deleteIntervention(interventionId) {
 function initInterventionFormSubmit() {
     const formIntervention = document.getElementById("formIntervention");
     const date = formIntervention.elements["date"];
-    const userId = formIntervention.elements["userId"];
     const companyId = formIntervention.elements["companyId"];
-    const starthour = formIntervention.elements["userId"];
-    const endhour = formIntervention.elements["userId"];
+    const starthour = formIntervention.elements["starthour"];
+    const endhour = formIntervention.elements["endhour"];
     const tasks = formIntervention.elements["tasks"];
     date.addEventListener("input", validateDateInput);
-    userId.addEventListener("input", validateFullnameInput);
     companyId.addEventListener("input", validateCompanyInput);
-    starthour.addEventListener("input", validateStarthourInput);
-    endhour.addEventListener("input", validateEndhourInput);
+//    starthour.addEventListener("input", validateStarthourInput);
+//    endhour.addEventListener("input", validateEndhourInput);
     tasks.addEventListener("input", validateTasksInput);
     
     formIntervention.addEventListener("submit", formAddInterventionSubmit);
@@ -174,23 +161,28 @@ function initInterventionFormSubmit() {
 function formAddInterventionSubmit(event) {
     event.preventDefault();
     const date = this.elements["date"];
-    const userId = this.elements["userId"];
     const companyId = this.elements["companyId"];
     const starthour = this.elements["starthour"];
     const endhour = this.elements["endhour"];
-    const tasks = this.elements["tasks"];
-    
-    const isValid = validateDateInput() & validateFullnameInput() & validateCompanyInput() & validateStarthourInput() & validateStarthourInput() & validateEndhourInput() & validateTasksInput;
+    const taskOptions = this.elements["tasks"].selectedOptions;
+    const tasksId = [];
+    for (var i = 0; i < taskOptions.length; i++) {
+        const taskOption = taskOptions[i];
+        tasksId.push({
+            id:taskOption.value
+        });
+    }
+ 
+    const isValid = validateDateInput() & validateCompanyInput() & validateStarthourInput() & validateEndhourInput() & validateTasksInput();
     if(isValid == 1) {
         switch (submitMode) {
             case SUBMIT_MODE.ADD: {
                 XHR_CALL.postIntervention({
                     date: date.value,
-                    userId: userId.value,
                     companyId: companyId.value,
                     starthour: starthour.value,
                     endhour: endhour.value,
-                    tasks: tasks.value
+                    tasks: tasksId
                 })
                 .then(() => {
                     loadInterventionsDataTable();
@@ -201,7 +193,6 @@ function formAddInterventionSubmit(event) {
             case SUBMIT_MODE.EDIT: {
                 XHR_CALL.putIntervention(interventionToEdit.id, {
                     date: date.value,
-                    userId: userId.value,
                     companyId: companyId.value,
                     starthour: starthour.value,
                     endhour: endhour.value,
@@ -223,17 +214,6 @@ function validateDateInput() {
     date.classList.remove("is-invalid");
     if(date.value == null || date.value.trim() == "") {
         date.classList.add("is-invalid");
-        return false;
-    }
-    return true;
-}
-
-function validateFullnameInput() {
-    const formIntervention = document.getElementById("formIntervention");
-    const userId = formIntervention.elements["userId"];
-    userId.classList.remove("is-invalid");
-    if(userId.value == null || userId.value.trim() == "") {
-        userId.classList.add("is-invalid");
         return false;
     }
     return true;

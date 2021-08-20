@@ -22,11 +22,12 @@ import java.util.List;
 public class DaoIntervention {
 
     public static Intervention create(Intervention intervention) {
+        
         String sql = "INSERT INTO interventions (user_id,company_id,date,start_hour,end_hour) VALUES (?,?,?,?,?)";
         Connection connection = DbConnector.getDbConnection();
 
         try {
-            PreparedStatement Pst = connection.prepareStatement(sql);
+            PreparedStatement Pst = connection.prepareStatement(sql,  Statement.RETURN_GENERATED_KEYS);
             Pst.setInt(1,intervention.getUserId());
             Pst.setInt(2, intervention.getCompanyId());
             Pst.setString(3,intervention.getDate());
@@ -34,12 +35,12 @@ public class DaoIntervention {
             Pst.setString(5, intervention.getEndhour());
 
             Pst.executeUpdate();
-            createTaskInter(intervention);
             
             ResultSet rs = Pst.getGeneratedKeys();
             if (rs.next()) {
                int id = rs.getInt(1);
                intervention.setId(id);
+                createTaskInter(intervention);
                return intervention;
             }
             System.out.println("Added sucess");
@@ -63,11 +64,11 @@ public class DaoIntervention {
             while (resultSet.next()) {
                 intervention = new Intervention();
                 intervention.setId(resultSet.getInt("id"));
-                intervention.setUserId(resultSet.getInt("userId"));
-                intervention.setCompanyId(resultSet.getInt("companyId"));
+                intervention.setUserId(resultSet.getInt("user_id"));
+                intervention.setCompanyId(resultSet.getInt("company_id"));
                 intervention.setDate(resultSet.getString("date"));
-                intervention.setStarthour("starthour");
-                intervention.setEndhour("endhour");
+                intervention.setStarthour("start_hour");
+                intervention.setEndhour("end_hour");
                 intervention.setTasks(getInterTasks(resultSet.getInt("id")));
                 
                 
@@ -174,8 +175,8 @@ public class DaoIntervention {
         Connection connection = DbConnector.getDbConnection();
 
         try {
-            
             for( Task task :tasks){
+                System.out.println(task.getId());
              PreparedStatement Pst = connection.prepareStatement(sql);
             Pst.setInt(1,inter.getId());
             Pst.setInt(2, task.getId());
