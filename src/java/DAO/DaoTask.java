@@ -19,7 +19,7 @@ import java.util.List;
  * @author xpro
  */
 public class DaoTask {
-     public static void create(Task task)
+     public static Task create(Task task)
 {
    String sql = "INSERT INTO tasks (title, description) VALUES (?, ?)";
         Connection connection = DbConnector.getDbConnection();
@@ -30,12 +30,19 @@ public class DaoTask {
             Pst.setString(2, task.getDescription());
  
             Pst.executeUpdate();
+            ResultSet rs = Pst.getGeneratedKeys();
+            if (rs.next()) {
+               int id = rs.getInt(1);
+               task.setId(id);
+               return task;
+            }
+            System.out.println("Added sucess");
         } 
         catch (SQLException e) 
         {
             e.printStackTrace();
         }
-    
+        return null;
 }  
     
   public static List<Task> getAll()
@@ -88,7 +95,7 @@ public static Task getTask(int idtask) {
         return task;
     }
 
-public static void updateTask(Task task) {
+public static Task updateTask(Task task) {
      String sql = " UPDATE tasks set  title=?, description=? WHERE id=?";
         Connection connection = DbConnector.getDbConnection();
         PreparedStatement Pst;
@@ -101,15 +108,16 @@ public static void updateTask(Task task) {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return getTask(task.getId());
     }
 
-public static void deleteTask(Task task) {
+public static void deleteTask(int id) {
         String sql = "DELETE FROM tasks WHERE id = ?;";
         Connection connection = DbConnector.getDbConnection();
         PreparedStatement statement;
         try {
             statement = connection.prepareStatement(sql);
-            statement.setInt(1, task.getId());
+            statement.setInt(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

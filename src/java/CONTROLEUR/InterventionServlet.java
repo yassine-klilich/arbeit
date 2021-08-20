@@ -20,125 +20,89 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.google.gson.Gson;
+import services.Utility;
+
 
 
 @WebServlet(name = "InterventionServlet", urlPatterns = {"/interventions"})
 public class InterventionServlet extends HttpServlet {
 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String action = request.getParameter("action");
-             
-         try {
-            switch (action)
-            {
-                 
-                 case "list":
-                     this.Index(request, response);
-                    break;
-                 case "insert":
-		    this.Store(request, response);
-                    break;
-                case "delete":
-                    this.Delete(request, response);
-                    break;
-                case "update":
-                    this.Update(request, response);
-                    break;
-               
-            }
-        }catch (Exception ex)
-        {
-            throw new ServletException(ex);
-        }
-        
-    }
 
     
-    private void Index(HttpServletRequest request, HttpServletResponse response)
-			throws SQLException, IOException, ServletException {
-                List<Intervention> interventions = DaoIntervention.getAll();
-                List<Task> tasks = DaoTask.getAll();
-		request.setAttribute("interventions", interventions);
-                request.setAttribute("tasks", tasks);
-                RequestDispatcher dispatcher = request.getRequestDispatcher("tasks.jsp");
-                dispatcher.forward(request, response);
-	}
+    private Gson gson = new Gson();
     
-    private void Store(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException,ServletException {
-    
-                     
-		int user_id = Integer.parseInt(request.getParameter("user_id"));
-                int company_id = Integer.parseInt(request.getParameter("company_id"));
-                String date = request.getParameter("date");
-                String start_hour = request.getParameter("start_hour");
-                String end_hour = request.getParameter("end_hour");
-                // A compliter .....
-
-                Intervention  inter = new Intervention();
-                inter.setUser_id(user_id);
-                inter.setCompany_id(company_id);
-                inter.setDate(date);
-                inter.setStart_hour(start_hour);
-                inter.setEnd_hour(end_hour);
-             
-                DaoIntervention.create(inter); 
-                List<Intervention> interventions = DaoIntervention.getAll();
-		request.setAttribute("interventions", interventions);
-                RequestDispatcher dispatcher = request.getRequestDispatcher("interventions.jsp");
-		dispatcher.forward(request, response);
-	}
-    
-    private void Delete(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException,ServletException {
-            
-            
-		int id = Integer.parseInt(request.getParameter("id"));
-                
-                Intervention intervention = DaoIntervention.getIntervention(id);
-                
-		DaoIntervention.deleteIntervention(intervention);
-                
-                
-		response.sendRedirect("interventions?action=list");
-	}
-    
-    @Override
+      @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-        private void Update(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException {
-		int  id = Integer.parseInt(request.getParameter("id"));
-		String date = request.getParameter("date");
-                String start_hour = request.getParameter("start_hour");
-                String end_hour = request.getParameter("end_hour");
-                
-                // A compliter 
-                
-		Intervention inter = new Intervention(); 
-                inter.setId(id);
-                inter.setDate(date);
-                inter.setStart_hour(start_hour);
-                inter.setEnd_hour(end_hour);
-                
-                DaoIntervention.updateIntervention(inter);
-		response.sendRedirect("interventions?action=list");
-	}
         
-    @Override
+                String interventionid = request.getParameter("id");
+                String jsonResponse = "";
+                if(interventionid != null) {
+                    Intervention intervention = DaoIntervention.getIntervention(Integer.parseInt(interventionid));
+                    if(intervention == null) {
+                        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    }
+                    else {
+                        jsonResponse = this.gson.toJson(intervention);
+
+                    }
+                }
+                else {
+                    List<Intervention> listInterventions = DaoIntervention.getAll();
+                    jsonResponse = this.gson.toJson(listInterventions);
+                        // Ajouter la liste des company
+                        // Ajouter la liste des tasks
+                }
+                PrintWriter out = response.getWriter();
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                out.print(jsonResponse);
+                out.flush();
+            }
+
+       
+        @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        final String strBody = Utility.convertStreamToString(request.getInputStream());
+        Intervention interventions = this.gson.fromJson(strBody, Intervention.class);
+        interventions = DaoIntervention.create(interventions);
+        String jsonResponse = "";
+        if(interventions != null) {
+            jsonResponse = this.gson.toJson(interventions);
+        }
+        PrintWriter out = response.getWriter();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        out.print(jsonResponse);
+        out.flush();
     }
 
-   
-    @Override
-    public String getServletInfo() {
-        return "Short description";
+        @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String interventionId = req.getParameter("id");
+        if(interventionId != null) {
+            DaoIntervention.deleteIntervention(Integer.parseInt(interventionId));
+        }
+    }
+
+        @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String interventionId = request.getParameter("id");
+        final String strBody = Utility.convertStreamToString(request.getInputStream());
+        Intervention intervention = this.gson.fromJson(strBody, Intervention.class);
+        intervention.setId(Integer.parseInt(interventionId));
+        intervention = DaoIntervention.updateIntervention(intervention);
+        String jsonResponse = "";
+        if(intervention != null) {
+            jsonResponse = this.gson.toJson(intervention);
+        }
+        PrintWriter out = response.getWriter();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        out.print(jsonResponse);
+        out.flush();
     }
 
 }

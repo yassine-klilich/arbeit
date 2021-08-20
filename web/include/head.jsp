@@ -16,6 +16,8 @@
 
     <!-- BEGIN: Vendor CSS-->
     <link rel="stylesheet" type="text/css" href="asset/app-assets/vendors/css/vendors.min.css">
+    <link rel="stylesheet" type="text/css" href="asset/app-assets/vendors/css/pickers/pickadate/pickadate.css">
+    <link rel="stylesheet" type="text/css" href="asset/app-assets/vendors/css/pickers/flatpickr/flatpickr.min.css">
     <!-- END: Vendor CSS-->
 
     <!-- BEGIN: Theme CSS-->
@@ -24,6 +26,8 @@
     <link rel="stylesheet" type="text/css" href="asset/app-assets/css/colors.css">
     <link rel="stylesheet" type="text/css" href="asset/app-assets/css/components.css">
     <link rel="stylesheet" type="text/css" href="asset/app-assets/css/themes/dark-layout.css">
+    <link rel="stylesheet" type="text/css" href="asset/app-assets/vendors/css/forms/select/select2.min.css">
+
 
     <!-- BEGIN: Page CSS-->
     <link rel="stylesheet" type="text/css" href="asset/app-assets/css/core/menu/menu-types/vertical-menu.css">
