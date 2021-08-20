@@ -254,6 +254,26 @@ const XHR_CALL = (function (){
         });
     };
     
+    _XHR_.getUsers = function() {
+        return fetch(URLs.COMPANIES, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((response)=>{
+            if(response.ok === true && response.status === 200) {
+                return response.json();
+            }
+            else {
+                throw new Error(`${response.status}, ${response.statusText}`);
+            }
+        })
+        .catch(err => {
+            console.error(`ERROR[XHR_CALL] :: getUsers \n`, err);
+        });
+    };
+    
     _XHR_.deleteCompany = function(id) {
         return fetch(`${URLs.COMPANIES}?id=${id}`, {
             method: "DELETE",
