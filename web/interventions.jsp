@@ -1,3 +1,7 @@
+<%@page import="DAO.DaoCompany"%>
+<%@page import="MODEL.Company"%>
+<%@page import="DAO.DaoTask"%>
+<%@page import="MODEL.Task"%>
 <%@page import="MODEL.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
@@ -111,16 +115,18 @@
                            placeholder="YYYY-MM-DD"  readonly="readonly">
                     <span class="invalid-feedback">This field is required</span>
                 </div>
-                <div class="form-group">
-                    <label for="fullName">Full Name</label>
-                    <input type="text" class="form-control" name="userId" id="userId" placeholder="Full Name">
-                    <span class="invalid-feedback">This field is required</span>
-                </div>
+                
                 <div class="form-group">
                     <label for="">Company</label>
                     <select class="select2 form-control" name="companyId" id="company">
                         
-                          <!--  ajouter des options sur le fichier js -->
+                          <% List<Company> listCompany = DaoCompany.getAll();
+                            for (Company company : listCompany) {
+                        %>
+                        <option value="<%= company.getId() %>"><%= company.getCompany_name() %></option>
+                        <%          
+                           }
+                        %>
                         
                     </select>
 
@@ -142,7 +148,13 @@
                     <label>Tasks</label>
                     <select class="select2 form-control" id="tasks" name="tasks" multiple>
                         
-                          <!--  ajouter des options sur le fichier js -->
+                        <% List<Task> listTask = DaoTask.getAll();
+                            for (Task task : listTask) {
+                        %>
+                        <option value="<%= task.getId() %>"><%= task.getTitle() %></option>
+                        <%          
+                           }
+                        %>
 
                         
                     </select>

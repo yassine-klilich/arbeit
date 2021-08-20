@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
+import javax.servlet.http.HttpSession;
 import services.Utility;
 
 
@@ -67,16 +68,20 @@ public class InterventionServlet extends HttpServlet {
             throws ServletException, IOException {
         final String strBody = Utility.convertStreamToString(request.getInputStream());
         Intervention interventions = this.gson.fromJson(strBody, Intervention.class);
+        HttpSession session=request.getSession();
+        User usr = (User)session.getAttribute("user");
+        interventions.setUserId(usr.getId());
         interventions = DaoIntervention.create(interventions);
-        String jsonResponse = "";
-        if(interventions != null) {
-            jsonResponse = this.gson.toJson(interventions);
-        }
-        PrintWriter out = response.getWriter();
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        out.print(jsonResponse);
-        out.flush();
+
+//        String jsonResponse = "";
+//        if(interventions != null) {
+//            jsonResponse = this.gson.toJson(interventions);
+//        }
+//        PrintWriter out = response.getWriter();
+//        response.setContentType("application/json");
+//        response.setCharacterEncoding("UTF-8");
+//        out.print(jsonResponse);
+//        out.flush();
     }
 
         @Override
