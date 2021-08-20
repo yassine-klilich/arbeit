@@ -2,7 +2,8 @@ const XHR_CALL = (function (){
     const URLs = Object.freeze({
         USERS: "/arbeit-j2ee/users",
         TASKS: "/arbeit-j2ee/tasks",
-        Interventions: "/arbeit-j2ee/interventions"
+        Interventions: "/arbeit-j2ee/interventions",
+        COMPANIES: "/arbeit-j2ee/companies",
     });
     
     const _XHR_ = {};
@@ -96,7 +97,7 @@ const XHR_CALL = (function (){
                 'Content-Type': 'application/json'
             }
         })
-        .then((response)=>{
+        .then(function (response) {
             if(response.ok === true && response.status === 200) {
                 return response.json();
             }
@@ -253,7 +254,25 @@ const XHR_CALL = (function (){
         });
     };
     
-    
+    _XHR_.deleteCompany = function(id) {
+        return fetch(`${URLs.COMPANIES}?id=${id}`, {
+            method: "DELETE",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((response)=>{
+            if(response.ok === true && response.status === 200) {
+                return response;
+            }
+            else {
+                throw new Error(`${response.status}, ${response.statusText}`);
+            }
+        })
+        .catch(err => {
+            console.error(`ERROR[XHR_CALL] :: deleteUser \n`, err);
+        });
+    };
     
     return _XHR_;
 })();

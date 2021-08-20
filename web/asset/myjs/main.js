@@ -1,4 +1,4 @@
-$( "#addcompanyform" ).submit(function( event ) {
+/*$( "#company-form" ).submit(function( event ) {
   event.preventDefault();
   i=0;
    if(!$("#companyName").val()){
@@ -37,11 +37,12 @@ $( "#addcompanyform" ).submit(function( event ) {
   }
   
   if(i===5){
-      $("#addcompanyform")[0].submit();
+      //$("#addcompanyform")[0].submit();
+      
   }
    
   
-});
+});*/
 
 $(window).on('load', function () {
         if (feather) {

@@ -66,7 +66,7 @@
                 </a>
             </li>
             <li class="nav-item <%=(activeNav.equals("companies"))?"active":""%>">
-                <a class="d-flex align-items-center" <%=(activeNav.equals("home"))?"":" href='home.jsp'"%>">
+                <a class="d-flex align-items-center" <%=(activeNav.equals("companies"))?"":" href='companies.jsp'"%>">
                     <i data-feather="circle"></i>
                     <span class="menu-title text-truncate" data-i18n="Chat">Companies</span>
                 </a>
