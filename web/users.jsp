@@ -10,10 +10,12 @@
 <%@page import="java.util.List"%>
 <%
     String userName = "";
+    int userId = 0;
     boolean isAdmin = false;
     if(session.getAttribute("user") != null) {
         User usr = (User)session.getAttribute("user");
         userName = usr.getUser_name();
+        userId = usr.getId();
         isAdmin = usr.getIs_admin();
     }
     if(session.getAttribute("user") == null || isAdmin == false) {
@@ -35,6 +37,7 @@
 <!-- BEGIN: Header-->
 <jsp:include page="include/header.jsp">
     <jsp:param name="username" value="<%=userName%>" />
+    <jsp:param name="userId" value="<%=userId%>" />
 </jsp:include>
 <!-- END: Header-->
 
@@ -94,8 +97,9 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="POST" id="formUser" class="needs-validation">
+            <form method="POST" id="formUser" action="/arbeit-j2ee/users" class="needs-validation" enctype="multipart/form-data">
                 <div class="modal-body">
+                    <input type="hidden" name="id">
                     <div class="form-group">
                         <label for="fullName">Full Name</label>
                         <input type="text" class="form-control" name="fullName" id="fullName" placeholder="Full Name">
@@ -122,7 +126,7 @@
                     </div>
                     <div class="form-group">
                         <label for="ContactName">Avatar</label>
-                        <input type="file" class="form-control" name="avatar" id="avatar" accept="image/png, image/jpeg, image/jpg">
+                        <input type="file" class="form-control" name="avatar" id="avatar" accept="image/jpeg">
                         <span id="avatar_error" class="avatar"></span>
                     </div>
                 </div>

@@ -80,10 +80,12 @@ function openModalFormUser(mode, userData) {
         } break;
         case SUBMIT_MODE.EDIT: {
             modalFormUserHeading.textContent = "Edit User";
+            const idInput = formUser.elements["id"];
             const fullName = formUser.elements["fullName"];
             const username = formUser.elements["username"];
             const email = formUser.elements["email"];
             const isAdmin = formUser.elements["isAdmin"];
+            idInput.value = userData.id;
             fullName.value = userData.full_name;
             username.value = userData.user_name;
             email.value = userData.email;
@@ -139,43 +141,9 @@ function initUserFormSubmit() {
 
 function formAddUserSubmit(event) {
     event.preventDefault();
-    const fullName = this.elements["fullName"];
-    const username = this.elements["username"];
-    const email = this.elements["email"];
-    const password = this.elements["password"];
-    const isAdmin = this.elements["isAdmin"];
     const isValid = validateFullNameInput() & validateUsernameInput() & validateEmailInput() & validatePasswordInput();
     if(isValid == 1) {
-        switch (submitMode) {
-            case SUBMIT_MODE.ADD: {
-                XHR_CALL.postUser({
-                    full_name: fullName.value,
-                    user_name: username.value,
-                    email: email.value,
-                    password: password.value,
-                    is_admin: isAdmin.checked
-                })
-                .then(() => {
-                    loadUsersDataTable();
-                    modalFormUser.hide();
-                    userToEdit = null;
-                });
-            } break;
-            case SUBMIT_MODE.EDIT: {
-                XHR_CALL.putUser(userToEdit.id, {
-                    full_name: fullName.value,
-                    user_name: username.value,
-                    email: email.value,
-                    password: password.value,
-                    is_admin: isAdmin.checked
-                })
-                .then(() => {
-                    loadUsersDataTable();
-                    modalFormUser.hide();
-                    userToEdit = null;
-                });
-            } break;
-        }
+        this.submit();
     }
 }
 

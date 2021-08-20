@@ -15,7 +15,7 @@
                 <div class="user-nav d-sm-flex d-none"><span
                         class="user-name font-weight-bolder">${param.username}</span><span hidden class="user-status"></span>
                 </div>
-                <span class="avatar"><img class="round" src="asset/app-assets/images/portrait/small/avatar-s-11.jpg"
+                        <span class="avatar"><img class="round" src="images/mugshot_${param.userId}.jpeg"
                                           alt="avatar" height="40" width="40"><span class="avatar-status-online"></span></span>
             </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-user">

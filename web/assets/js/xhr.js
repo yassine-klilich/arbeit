@@ -1,7 +1,8 @@
 
 const XHR_CALL = (function (){
     const URLs = Object.freeze({
-        USERS: "/arbeit-j2ee/users"
+        USERS: "/arbeit-j2ee/users",
+        COMPANIES: "/arbeit-j2ee/companies",
     });
     
     const _XHR_ = {};
@@ -88,7 +89,45 @@ const XHR_CALL = (function (){
         });
     };
     
+    _XHR_.getCompanies = function () {
+        return fetch(URLs.COMPANIES, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(function (response) {
+            if(response.ok === true && response.status === 200) {
+                return response.json();
+            }
+            else {
+                throw new Error(`${response.status}, ${response.statusText}`);
+            }
+        })
+        .catch(err => {
+            console.error(`ERROR[XHR_CALL] :: getCompanies \n`, err);
+        });
+    };
     
+    _XHR_.deleteCompany = function(id) {
+        return fetch(`${URLs.COMPANIES}?id=${id}`, {
+            method: "DELETE",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((response)=>{
+            if(response.ok === true && response.status === 200) {
+                return response;
+            }
+            else {
+                throw new Error(`${response.status}, ${response.statusText}`);
+            }
+        })
+        .catch(err => {
+            console.error(`ERROR[XHR_CALL] :: deleteUser \n`, err);
+        });
+    };
     
     return _XHR_;
 })();
