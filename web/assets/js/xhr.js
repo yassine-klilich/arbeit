@@ -254,7 +254,7 @@ const XHR_CALL = (function (){
         });
     };
     
-    _XHR_.getUsers = function() {
+    _XHR_.getCompanies = function() {
         return fetch(URLs.COMPANIES, {
             method: "GET",
             headers: {
