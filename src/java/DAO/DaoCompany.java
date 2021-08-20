@@ -12,13 +12,13 @@ import java.util.List;
 
 public class DaoCompany {
     
-    public static void create(Company company)
-{
-   String sql = "INSERT INTO companies (company_name, adresse, telephone, email, contact_name, avatar) VALUES (?, ?, ?, ?, ?, ?)";
+    public static Company create(Company company)
+    {
+        String sql = "INSERT INTO companies (company_name, adresse, telephone, email, contact_name, avatar) VALUES (?, ?, ?, ?, ?, ?)";
         Connection connection = DbConnector.getDbConnection();
-         
+
         try 
-        {   PreparedStatement Pst= connection.prepareStatement(sql);
+        {   PreparedStatement Pst= connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             Pst.setString(1, company.getCompany_name());
             Pst.setString(2, company.getAdresse());
             Pst.setString(3, company.getTelephone());
@@ -26,13 +26,20 @@ public class DaoCompany {
             Pst.setString(5, company.getContact_name());
             Pst.setString(6, company.getAvatar());
             Pst.executeUpdate();
+
+            ResultSet rs = Pst.getGeneratedKeys();
+            if (rs.next()) {
+               int id = rs.getInt(1);
+               company.setId(id);
+               return company;
+            }
         } 
         catch (SQLException e) 
         {
             e.printStackTrace();
         }
-    
-}  
+        return null;
+    }  
     
   public static List<Company> getAll()
 {
@@ -115,13 +122,13 @@ public static void updateCompany(Company company) {
         }
     }
 
-public static void deleteUser(Company company) {
+public static void deleteCompany(Integer id) {
         String sql = "DELETE FROM companies WHERE id = ?;";
         Connection connection = DbConnector.getDbConnection();
         PreparedStatement statement;
         try {
             statement = connection.prepareStatement(sql);
-            statement.setInt(1, company.getId());
+            statement.setInt(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

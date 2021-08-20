@@ -12,132 +12,21 @@ import javax.servlet.http.HttpServletResponse;
 import MODEL.User;
 import DAO.DaoUser;
 import com.google.gson.Gson;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.net.URLConnection;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.http.Part;
 import services.Utility;
 
 @WebServlet(name = "userServlet", urlPatterns = {"/users"})
+@MultipartConfig(maxFileSize = 16177215) // upload file up to 16MB
 public class userServlet extends HttpServlet {
-
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        String action = request.getParameter("action");
-
-        try {
-            switch (action)
-            {
-                case "insert":
-                    insertUser(request, response);
-                break;
-                case "list":
-                    listUser(request, response);
-                break;
-                case "new":
-                    showNewForm(request, response);
-                break;
-                case "delete":
-                    deleteUser(request, response);
-                break;
-                case "edit":
-                    showEditForm(request, response);
-                break;
-                case "update":
-                    updateUser(request, response);
-                break;
-            }
-        }
-        catch (Exception ex)
-        {
-            throw new ServletException(ex);
-        }
-    
-    }
-    
-    private void showNewForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("add-users.jsp");
-        dispatcher.forward(request, response);
-    }
-
-    private void insertUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException,ServletException {
-        String full_name = request.getParameter("full_name");
-        String user_name = request.getParameter("user_name");
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        String confirm_password = request.getParameter("confirm_password");
-        Boolean is_admin = (request.getParameter("is_admin") != null);
-        User user = new User(); 
-        user.setFull_name(full_name);
-        user.setUser_name(user_name);
-        user.setEmail(email);
-        user.setIs_admin(is_admin);
-        
-        if(password.equals(confirm_password)) {
-            user.setPassword(password);
-            DaoUser.create(user);
-            List<User> listArt = DaoUser.getAll();
-            request.setAttribute("dataUsers", listArt);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("users.jsp");
-            dispatcher.forward(request, response);
-        }
-        else {
-            request.setAttribute("password_mismatch", true);
-            request.setAttribute("user",user);
-            request.getRequestDispatcher("add-users.jsp").forward(request,response);
-        }
-    }
-
-    private void deleteUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException,ServletException {
-//        int id = Integer.parseInt(request.getParameter("id"));
-//        User user = DaoUser.getuser(id);        
-//        DaoUser.deleteUser(user);
-//        response.sendRedirect("/Arbeit/users?action=list");
-    }
-
-    private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
-        User user = DaoUser.getuser(id);
-        request.setAttribute("user", user);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("edit_user.jsp");
-        dispatcher.forward(request, response);
-    }
-    
-    private void updateUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-        int  id = Integer.parseInt(request.getParameter("id"));
-        String full_name = request.getParameter("full_name");
-        String user_name = request.getParameter("user_name");
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        Boolean is_admin = Boolean.parseBoolean(request.getParameter("is_admin"));
-        User us = new User(); 
-        us.setId(id);
-        us.setFull_name(full_name);
-        us.setUser_name(user_name);
-        us.setEmail(email);
-        us.setPassword(password);
-        us.setIs_admin(is_admin);
-        DaoUser.updateUser(us);
-        response.sendRedirect("userServlet?action=list");
-    }
-
-    private void listUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
-        List<User> listuser = DaoUser.getAll();
-        request.setAttribute("dataUsers", listuser);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("users.jsp");
-        dispatcher.forward(request, response);
-    }
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     private Gson gson = new Gson();
     
@@ -165,20 +54,59 @@ public class userServlet extends HttpServlet {
         out.flush();
     }
 
+    private final static Logger LOGGER = 
+            Logger.getLogger(userServlet.class.getCanonicalName());
+private String getFileName(final Part part) {
+    final String partHeader = part.getHeader("content-disposition");
+    LOGGER.log(Level.INFO, "Part Header = {0}", partHeader);
+    for (String content : part.getHeader("content-disposition").split(";")) {
+        if (content.trim().startsWith("filename")) {
+            return content.substring(
+                    content.indexOf('=') + 1).trim().replace("\"", "");
+        }
+    }
+    return null;
+}
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        final String strBody = Utility.convertStreamToString(request.getInputStream());
-        User user = this.gson.fromJson(strBody, User.class);
-        user = DaoUser.create(user);
-        String jsonResponse = "";
-        if(user != null) {
-            jsonResponse = this.gson.toJson(user);
+        User user = new User();
+        String id = request.getParameter("id");
+        String fullName = request.getParameter("fullName");
+        String username = request.getParameter("username");
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        String isAdmin = request.getParameter("isAdmin");
+        
+        
+        user.setFull_name(fullName);
+        user.setUser_name(username);
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setIs_admin(isAdmin != null);
+        
+        if(id != null && !id.equals("")) {
+            user.setId(Integer.parseInt(id));
+            DaoUser.updateUser(user);
         }
-        PrintWriter out = response.getWriter();
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        out.print(jsonResponse);
-        out.flush();
+        else {
+            DaoUser.create(user);
+        }
+        int userId = user.getId();
+        Part file = request.getPart("avatar");
+        String uploadPath = "C:\\Users\\Yassine Klilich\\Documents\\NetBeansProjects\\arbeit-j2ee\\web\\images\\mugshot_" + userId + ".jpeg";
+        try{
+            FileOutputStream fos = new FileOutputStream(uploadPath);
+            InputStream is = file.getInputStream();
+            byte[] data = new byte[is.available()];
+            is.read(data);
+            fos.write(data);
+            fos.close();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        
+        response.sendRedirect("users.jsp");
     }
 
     @Override

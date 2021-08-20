@@ -3,6 +3,7 @@ package CONTROLEUR;
 
 import MODEL.Company;
 import DAO.DaoCompany;
+import com.google.gson.Gson;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -18,186 +19,89 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import javax.servlet.annotation.MultipartConfig;
+import services.Utility;
 
-@WebServlet(name = "companyServlet", urlPatterns = {"/compagnies"})
+@WebServlet(name = "companyServlet", urlPatterns = {"/companies"})
 @MultipartConfig(maxFileSize = 16177215) // upload file up to 16MB
 
 public class companyServlet extends HttpServlet {
 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-            String action = request.getParameter("action");
-             
-         try {
-            switch (action)
-            {
-                 
-                 case "list":
-                     this.Index(request, response);
-                    break;
-                 case "insert":
-		    this.Store(request, response);
-                    break;
-                case "delete":
-                    this.Delete(request, response);
-                    break;
-                case "update":
-                    this.Update(request, response);
-                    break;
-                case "show":
-                    this.Show(request, response);
-                    break;
-               
+    private Gson gson = new Gson();
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String companyId = request.getParameter("id");
+        String jsonResponse = "";
+        if(companyId != null) {
+            Company user = DaoCompany.getCompany(Integer.parseInt(companyId));
+            if(user == null) {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            }
+            else {
+                jsonResponse = this.gson.toJson(user);
             }
         }
-        catch (Exception ex)
-        {
-            throw new ServletException(ex);
+        else {
+            List<Company> listCompany = DaoCompany.getAll();
+            jsonResponse = this.gson.toJson(listCompany);
         }
-
+        PrintWriter out = response.getWriter();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        out.print(jsonResponse);
+        out.flush();
     }
-    
-private void Index(HttpServletRequest request, HttpServletResponse response)
-			throws SQLException, IOException, ServletException {
-     List<Company> compagnies = DaoCompany.getAll();
-		request.setAttribute("compagnies", compagnies);
-                RequestDispatcher dispatcher = request.getRequestDispatcher("compagnies.jsp");
-                dispatcher.forward(request, response);
-	}
 
-private void Show(HttpServletRequest request, HttpServletResponse response)
-			throws SQLException, IOException, ServletException {
-                int id = Integer.parseInt(request.getParameter("id")) ;
-                Company company = DaoCompany.getCompany(id);
-		request.setAttribute("company", company);
-                RequestDispatcher dispatcher = request.getRequestDispatcher("company-profile.jsp");
-                dispatcher.forward(request, response);
-	}
-private void Store(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException,ServletException {
-    
- 
-		String company_name = request.getParameter("company_name");
-                String adresse = request.getParameter("adresse");
-                String telephone = request.getParameter("telephone");
-                String email = request.getParameter("email");
-                String contact_name = request.getParameter("contact_name");
-                
-                Part file = request.getPart("avatar");
-                //String ImageName = file.getSubmittedFileName();
-                String ImageName = company_name;
-                String uploadPath = "C:\\Users\\Yassine Klilich\\Documents\\NetBeansProjects\\arbeit-j2ee\\web\\images\\"+ImageName;
-                try{
-                FileOutputStream fos = new FileOutputStream(uploadPath);
-                InputStream is = file.getInputStream();
-                byte[] data = new byte[is.available()];
-                is.read(data);
-                fos.write(data);
-                fos.close();
-                }
-                catch(Exception e){
-                    e.printStackTrace();
-                }
-         
-                
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Company company = new Company();
+        String id = request.getParameter("id");
+        String company_name = request.getParameter("company_name");
+        String adresse = request.getParameter("adresse");
+        String telephone = request.getParameter("telephone");
+        String email = request.getParameter("email");
+        String contact_name = request.getParameter("contact_name");
         
-                 
-                Company company = new Company();
-                company.setCompany_name(company_name);
-                company.setAdresse(adresse);
-                company.setTelephone(telephone);
-                company.setEmail(email);
-                company.setContact_name(contact_name);  
-               company.setAvatar(ImageName);
-                
-
-      
-
-                DaoCompany.create(company); 
-//		response.sendRedirect("ArticleServlet?action=list");
-                List<Company> listcompagnies = DaoCompany.getAll();
-		request.setAttribute("compagnies", listcompagnies);
-                RequestDispatcher dispatcher = request.getRequestDispatcher("compagnies.jsp");
-		dispatcher.forward(request, response);
-              
-
-	}
-
-private void Delete(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException,ServletException {
-            
-            
-		int id = Integer.parseInt(request.getParameter("id"));
-                
-                Company company = DaoCompany.getCompany(id);
-                
-		DaoCompany.deleteUser(company);
-                
-                
-		response.sendRedirect("compagnies?action=list");
-//                RequestDispatcher dispatcher = request.getRequestDispatcher("Article.jsp");
-//                dispatcher.forward(request, response);
-	}
-
-private void Update(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException, ServletException {
-		int  id = Integer.parseInt(request.getParameter("id"));
-		String company_name = request.getParameter("company_name");
-                String adresse = request.getParameter("adresse");
-                String telephone = request.getParameter("telephone");
-                String email = request.getParameter("email");
-                String contact_name = request.getParameter("contact_name");
-                
-                Part file = request.getPart("avatar");
-                //String ImageName = file.getSubmittedFileName();
-                String ImageName = company_name;
-                String uploadPath = "/home/xpro/NetBeansProjects/arbeit-j2ee/web/images/"+ImageName;
-                try{
-                FileOutputStream fos = new FileOutputStream(uploadPath);
-                InputStream is = file.getInputStream();
-                byte[] data = new byte[is.available()];
-                is.read(data);
-                fos.write(data);
-                fos.close();
-                }
-                catch(Exception e){
-                    e.printStackTrace();
-                }
-
-		Company company = new Company(); 
-                company.setId(id);
-                company.setCompany_name(company_name);
-                company.setAdresse(adresse);
-                company.setTelephone(telephone);
-                company.setEmail(email);
-                company.setContact_name(contact_name);
-                company.setAvatar(ImageName);
-                DaoCompany.updateCompany(company);
-		response.sendRedirect("compagnies?action=list");
-	}
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-    
-    
-       private String extractFileName(Part part) {//This method will print the file name.
-        String contentDisp = part.getHeader("content-disposition");
-        String[] items = contentDisp.split(";");
-        for (String s : items) {
-            if (s.trim().startsWith("filename")) {
-                return s.substring(s.indexOf("=") + 2, s.length() - 1);
-            }
+        Part file = request.getPart("avatar");
+        String ImageName = company_name;
+        String uploadPath = "C:\\Users\\Yassine Klilich\\Documents\\NetBeansProjects\\arbeit-j2ee\\web\\images\\"+ImageName;
+        try{
+            FileOutputStream fos = new FileOutputStream(uploadPath);
+            InputStream is = file.getInputStream();
+            byte[] data = new byte[is.available()];
+            is.read(data);
+            fos.write(data);
+            fos.close();
         }
-        return "";
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        
+        company.setCompany_name(company_name);
+        company.setAdresse(adresse);
+        company.setTelephone(telephone);
+        company.setEmail(email);
+        company.setContact_name(contact_name);  
+        company.setAvatar(ImageName);
+        
+        if(id != null && !id.equals("")) {
+            company.setId(Integer.parseInt(id));
+            DaoCompany.updateCompany(company);
+        }
+        else {
+            DaoCompany.create(company);
+        }
+            
+        response.sendRedirect("companies.jsp");
     }
 
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String companyId = req.getParameter("id");
+        if(companyId != null) {
+            DaoCompany.deleteCompany(Integer.parseInt(companyId));
+        }
+    }
+
+    
 }
