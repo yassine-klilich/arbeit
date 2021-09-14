@@ -21,8 +21,7 @@
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-user">
                     <a class="dropdown-item" href="page-profile.html"><i class="mr-50" data-feather="user"></i> Profile</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="page-auth-login-v2.html"><i class="mr-50" data-feather="power"></i>
-                        Logout</a>
+                    <a class="dropdown-item" href="login"><i class="mr-50" data-feather="power"></i>Logout</a>
                 </div>
             </li>
         </ul>

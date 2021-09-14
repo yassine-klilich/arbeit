@@ -10,8 +10,6 @@ window.addEventListener("load", function(){
     loadInterventionsDataTable();
     initInterventionFormSubmit();
     modalFormIntervention = new bootstrap.Modal(document.getElementById('modalFormIntervention'));
-//    startHourPickr = flatpickr("#startHour", {});
-    debugger;
 });
 
 function loadInterventionsDataTable() {

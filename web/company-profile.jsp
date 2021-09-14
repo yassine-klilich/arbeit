@@ -1,90 +1,43 @@
 
 
+<%@page import="MODEL.User"%>
 <%@page import="MODEL.Company"%>
 <%
-            Company c = (Company) request.getAttribute("company");
-   
-        %>
+    String userName = "";
+    int userId = 0;
+    boolean isAdmin = false;
+    if(session.getAttribute("user") != null) {
+        User usr = (User)session.getAttribute("user");
+        userName = usr.getUser_name();
+        userId = usr.getId();
+        isAdmin = usr.getIs_admin();
+    }
+    if(session.getAttribute("user") == null || isAdmin == false) {
+        response.sendRedirect("login");
+    }
+%>
 <!DOCTYPE html>
 <html class="loading dark-layout" lang="en" data-layout="dark-layout" data-textdirection="ltr">
 <!-- BEGIN: Head-->
-
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-    <meta name="description"
-          content="Vuexy admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
-    <meta name="keywords"
-          content="admin template, Vuexy admin template, dashboard template, flat admin template, responsive admin template, web app">
-    <meta name="author" content="PIXINVENT">
-    <title>Dashboard ecommerce - Vuexy - Bootstrap HTML admin template</title>
-    <link rel="apple-touch-icon" href="asset/app-assets/images/ico/apple-icon-120.png">
-    <link rel="shortcut icon" type="image/x-icon" href="asset/app-assets/images/ico/favicon.ico">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600"
-          rel="stylesheet">
-
-    <!-- BEGIN: Vendor CSS-->
-    <link rel="stylesheet" type="text/css" href="asset/app-assets/vendors/css/vendors.min.css">
-    <!-- END: Vendor CSS-->
-
-    <!-- BEGIN: Theme CSS-->
-    <link rel="stylesheet" type="text/css" href="asset/app-assets/css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="asset/app-assets/css/bootstrap-extended.css">
-    <link rel="stylesheet" type="text/css" href="asset/app-assets/css/colors.css">
-    <link rel="stylesheet" type="text/css" href="asset/app-assets/css/components.css">
-    <link rel="stylesheet" type="text/css" href="asset/app-assets/css/themes/dark-layout.css">
-
-    <!-- BEGIN: Page CSS-->
-    <link rel="stylesheet" type="text/css" href="asset/app-assets/css/core/menu/menu-types/vertical-menu.css">
-    <link rel="stylesheet" type="text/css" href="asset/app-assets/css/plugins/extensions/ext-component-sweet-alerts.css">
-    <link rel="stylesheet" type="text/css" href="asset/app-assets/css/plugins/forms/pickers/form-flat-pickr.css">
-    <!-- END: Page CSS-->
-
-    <!-- BEGIN: Custom CSS-->
-    <link rel="stylesheet" type="text/css" href="asset/assets/css/style.css">
-    <!-- END: Custom CSS-->
-
-</head>
+<jsp:include page="include/head.jsp"/>
 <!-- END: Head-->
 
 <!-- BEGIN: Body-->
 
-<body class="vertical-layout vertical-menu-modern  navbar-floating footer-static  " data-open="click"
-      data-menu="vertical-menu-modern" data-col="">
+<body class="vertical-layout vertical-menu-modern  navbar-floating footer-static  " data-open="click" data-menu="vertical-menu-modern" data-col="">
 
 <!-- BEGIN: Header-->
-<nav class="header-navbar navbar navbar-expand-lg align-items-center floating-nav navbar-dark navbar-shadow">
-    <div class="navbar-container d-flex content">
-        <div class="bookmark-wrapper d-flex align-items-center">
-            <ul class="nav navbar-nav d-xl-none">
-                <li class="nav-item"><a class="nav-link menu-toggle" href="javascript:void(0);"><i class="ficon"
-                                                                                                   data-feather="menu"></i></a>
-                </li>
-            </ul>
-        </div>
-        <ul class="nav navbar-nav align-items-center ml-auto">
-            <li class="nav-item dropdown dropdown-user"><a class="nav-link dropdown-toggle dropdown-user-link"
-                                                           id="dropdown-user" href="javascript:void(0);"
-                                                           data-toggle="dropdown" aria-haspopup="true"
-                                                           aria-expanded="false">
-                <div class="user-nav d-sm-flex d-none"><span
-                        class="user-name font-weight-bolder">Said Ourhou</span><span class="user-status">Admin</span>
-                </div>
-                <span class="avatar"><img class="round" src="../app-assets/images/portrait/small/avatar-s-11.jpg"
-                                          alt="avatar" height="40" width="40"><span class="avatar-status-online"></span></span>
-            </a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-user">
-                    <a class="dropdown-item" href="page-profile.html"><i class="mr-50" data-feather="user"></i> Profile</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="page-auth-login-v2.html"><i class="mr-50" data-feather="power"></i>
-                        Logout</a>
-                </div>
-            </li>
-        </ul>
-    </div>
-</nav>
+<jsp:include page="include/header.jsp">
+    <jsp:param name="username" value="<%=userName%>" />
+    <jsp:param name="userId" value="<%=userId%>" />
+</jsp:include>
 <!-- END: Header-->
+
+<!-- BEGIN: Main Menu-->
+<jsp:include page="include/navigation.jsp">
+    <jsp:param name="activeNav" value="users" />
+</jsp:include>
+<!-- END: Main Menu-->
 
 
 <!-- BEGIN: Main Menu-->
@@ -202,11 +155,11 @@
                                         <div class="profile-img-container d-flex align-items-center">
                                             <div class="profile-img">
                                                 <img 
-                                                    class="rounded img-fluid" src="images/<%= c.getAvatar() %> " width="100" height="100" >
+                                                    class="rounded img-fluid" width="100" height="100" >
                                             </div>
                                             <!-- profile title -->
                                             <div class="profile-title ml-3">
-                                                <h2 class="text-white"><%= c.getCompany_name() %></h2>
+                                                <h2 class="text-white"></h2>
                                                 <p class="text-white">Sport cloths</p>
                                             </div>
                                         </div>

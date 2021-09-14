@@ -5,9 +5,11 @@
 <%
     String userName = "";
     boolean isAdmin = false;
+    int userId = 0;
     if(session.getAttribute("user") != null) {
         User usr = (User)session.getAttribute("user");
         userName = usr.getUser_name();
+        userId = usr.getId();
         isAdmin = usr.getIs_admin();
     }
     if(session.getAttribute("user") == null) {
@@ -30,6 +32,7 @@
 <!-- BEGIN: Header-->
 <jsp:include page="include/header.jsp">
     <jsp:param name="username" value="<%=userName%>" />
+    <jsp:param name="userId" value="<%=userId%>" />
 </jsp:include>
 <!-- END: Header-->
 

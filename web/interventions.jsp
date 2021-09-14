@@ -9,9 +9,11 @@
 <%
     String userName = "";
     boolean isAdmin = false;
+    int userId = 0;
     if(session.getAttribute("user") != null) {
         User usr = (User)session.getAttribute("user");
         userName = usr.getUser_name();
+        userId = usr.getId();
         isAdmin = usr.getIs_admin();
     }
     if(session.getAttribute("user") == null) {
@@ -22,7 +24,7 @@
 <!DOCTYPE html>
 <html class="loading dark-layout" lang="en" data-layout="dark-layout" data-textdirection="ltr">
 <!-- BEGIN: Head-->
-<<jsp:include page="include/head.jsp"/>
+<jsp:include page="include/head.jsp"/>
 <!-- END: Head-->
 
 <!-- BEGIN: Body-->
@@ -33,6 +35,7 @@
 <!-- BEGIN: Header-->
 <jsp:include page="include/header.jsp">
     <jsp:param name="username" value="<%=userName%>" />
+    <jsp:param name="userId" value="<%=userId%>" />
 </jsp:include>
 <!-- END: Header-->
 
