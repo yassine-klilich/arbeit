@@ -27,13 +27,13 @@ public class loginServlet extends HttpServlet {
         User usr = DaoUser.checkAuth(user_name, password);
         if(usr == null) {
             req.setAttribute("authstatus", false);
-            req.getRequestDispatcher("login.jsp").forward(req,resp);
+            resp.sendRedirect(req.getContextPath() + "/home");
         }
         else {
             HttpSession session = req.getSession();
             session.setAttribute("user", usr);
             //req.setAttribute("user",usr);
-            req.getRequestDispatcher("home.jsp").forward(req,resp);
+            resp.sendRedirect(req.getContextPath() + "/home");
         }
     }
 

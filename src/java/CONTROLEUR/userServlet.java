@@ -40,7 +40,9 @@ public class userServlet extends HttpServlet {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
             else {
-                jsonResponse = this.gson.toJson(user);
+                request.setAttribute("user", user);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("userprofil.jsp");
+                dispatcher.forward(request, response);
             }
         }
         else {
@@ -78,6 +80,7 @@ private String getFileName(final Part part) {
         String isAdmin = request.getParameter("isAdmin");
         
         
+        
         user.setFull_name(fullName);
         user.setUser_name(username);
         user.setEmail(email);
@@ -93,7 +96,7 @@ private String getFileName(final Part part) {
         }
         int userId = user.getId();
         Part file = request.getPart("avatar");
-        String uploadPath = "C:\\Users\\Yassine Klilich\\Documents\\NetBeansProjects\\arbeit-j2ee\\web\\images\\mugshot_" + userId + ".jpeg";
+        String uploadPath = "/home/xpro/NetBeansProjects/arbeit-j2ee/web/users-mugshot/mugshot_" + userId;
         try{
             FileOutputStream fos = new FileOutputStream(uploadPath);
             InputStream is = file.getInputStream();

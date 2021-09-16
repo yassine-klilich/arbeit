@@ -54,7 +54,7 @@
                 <i data-feather="more-horizontal"></i>
             </li>
             <li class="nav-item <%=(activeNav.equals("home"))?"active":""%>">
-                <a class="d-flex align-items-center" <%=(activeNav.equals("home"))?"":" href='home.jsp'"%>">
+                <a class="d-flex align-items-center" <%=(activeNav.equals("home"))?"":" href='/arbeit-j2ee/home'"%>">
                     <i data-feather="circle"></i>
                     <span class="menu-title text-truncate">Home</span>
                 </a>
@@ -85,7 +85,7 @@
                 </a>
             </li>
             <li class="nav-item <%=(activeNav.equals("timeSheet"))?"active":""%>">
-                <a class="d-flex align-items-center" <%=(activeNav.equals("home"))?"":" href='home.jsp'"%>">
+                <a class="d-flex align-items-center" <%=(activeNav.equals("home"))?"":" href=''"%>">
                     <i data-feather="circle"></i>
                     <span class="menu-title text-truncate" data-i18n="Todo">Time Sheet</span>
                 </a>

@@ -15,11 +15,11 @@
                 <div class="user-nav d-sm-flex d-none"><span
                         class="user-name font-weight-bolder">${param.username}</span><span hidden class="user-status"></span>
                 </div>
-                        <span class="avatar"><img class="round" src="images/mugshot_${param.userId}.jpeg"
+                        <span class="avatar"><img class="round" src="users-mugshot/mugshot_${param.userId}"
                                           alt="avatar" height="40" width="40"><span class="avatar-status-online"></span></span>
             </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-user">
-                    <a class="dropdown-item" href="page-profile.html"><i class="mr-50" data-feather="user"></i> Profile</a>
+                    <a class="dropdown-item" href="/arbeit-j2ee/users?id=${param.userId}"><i class="mr-50" data-feather="user"></i> Profile</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="login"><i class="mr-50" data-feather="power"></i>Logout</a>
                 </div>

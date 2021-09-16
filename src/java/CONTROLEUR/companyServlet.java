@@ -33,12 +33,14 @@ public class companyServlet extends HttpServlet {
         String companyId = request.getParameter("id");
         String jsonResponse = "";
         if(companyId != null) {
-            Company user = DaoCompany.getCompany(Integer.parseInt(companyId));
-            if(user == null) {
+            Company company = DaoCompany.getCompany(Integer.parseInt(companyId));
+            if(company == null) {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
             else {
-                jsonResponse = this.gson.toJson(user);
+                request.setAttribute("company", company);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("company-profile.jsp");
+                dispatcher.forward(request, response);
             }
         }
         else {
@@ -64,7 +66,7 @@ public class companyServlet extends HttpServlet {
         
         Part file = request.getPart("avatar");
         String ImageName = company_name;
-        String uploadPath = "C:\\Users\\Yassine Klilich\\Documents\\NetBeansProjects\\arbeit-j2ee\\web\\images\\"+ImageName;
+        String uploadPath = "/home/xpro/NetBeansProjects/arbeit-j2ee/web/Companyavatar/"+ImageName;
         try{
             FileOutputStream fos = new FileOutputStream(uploadPath);
             InputStream is = file.getInputStream();

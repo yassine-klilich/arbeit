@@ -32,41 +32,7 @@
 <html class="loading dark-layout" lang="en" data-layout="dark-layout" data-textdirection="ltr">
 <!-- BEGIN: Head-->
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-    <meta name="description"
-          content="Vuexy admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
-    <meta name="keywords"
-          content="admin template, Vuexy admin template, dashboard template, flat admin template, responsive admin template, web app">
-    <meta name="author" content="PIXINVENT">
-    <title>Dashboard ecommerce - Vuexy - Bootstrap HTML admin template</title>
-    <link rel="apple-touch-icon" href="asset/app-assets/images/ico/apple-icon-120.png">
-    <link rel="shortcut icon" type="image/x-icon" href="asset/app-assets/images/ico/favicon.ico">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600"
-          rel="stylesheet">
-
-    <!-- BEGIN: Vendor CSS-->
-    <link rel="stylesheet" type="text/css" href="asset/app-assets/vendors/css/vendors.min.css">
-    <!-- END: Vendor CSS-->
-
-    <!-- BEGIN: Theme CSS-->
-    <link rel="stylesheet" type="text/css" href="asset/app-assets/css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="asset/app-assets/css/bootstrap-extended.css">
-    <link rel="stylesheet" type="text/css" href="asset/app-assets/css/colors.css">
-    <link rel="stylesheet" type="text/css" href="asset/app-assets/css/components.css">
-    <link rel="stylesheet" type="text/css" href="asset/app-assets/css/themes/dark-layout.css">
-
-    <!-- BEGIN: Page CSS-->
-    <link rel="stylesheet" type="text/css" href="asset/app-assets/css/core/menu/menu-types/vertical-menu.css">
-    <link rel="stylesheet" type="text/css" href="asset/app-assets/css/plugins/extensions/ext-component-sweet-alerts.css">
-    <link rel="stylesheet" type="text/css" href="asset/app-assets/css/plugins/forms/pickers/form-flat-pickr.css">
-    <!-- END: Page CSS-->
-
-    <!-- BEGIN: Custom CSS-->
-    <link rel="stylesheet" type="text/css" href="asset/assets/css/style.css">
-    <!-- END: Custom CSS-->
-
+   <jsp:include page="include/head.jsp"/>
 </head>
 <!-- END: Head-->
 
@@ -113,6 +79,7 @@
                             <table class="table" id="data-table">
                                 <thead>
                                 <tr>
+                                    <th>ID</th>
                                     <th>Company Name</th>
                                     <th>Address</th>
                                     <th>Telephone</th>
@@ -246,7 +213,8 @@
             for(let i = 0; i < data.length; i++) {
                 const item = data[i];
                 const trElement = document.createElement("tr");
-                trElement.innerHTML = "<td>" + item.company_name + "</td>" +
+                trElement.innerHTML = "<td><a href='/arbeit-j2ee/companies?id="+item.id+"'>" + item.id + "</a></td>" +
+                        "<td>" + item.company_name + "</td>" +
                     "<td>" + item.adresse + "</td>" +
                     "<td>" + item.telephone + "</td>" +
                     "<td>" + item.email + "</td>" +
