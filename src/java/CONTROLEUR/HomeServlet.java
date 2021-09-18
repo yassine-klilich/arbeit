@@ -15,8 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 import DAO.DaoUser;
 import DAO.DaoIntervention;
 import DAO.DaoCompany;
+import MODEL.Intervention;
 import com.google.gson.Gson;
+import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
+import org.jboss.weld.util.collections.ListView;
 
 @WebServlet(name = "HomeServlet", urlPatterns = {"/home"})
 public class HomeServlet extends HttpServlet {
@@ -33,6 +36,16 @@ public class HomeServlet extends HttpServlet {
                 request.setAttribute("users", daouser.nomberOfUsers());
                 request.setAttribute("clients", daocompany.nomberOfCompagnies());
                 request.setAttribute("interventions", daointervention.nomberOfInterventions());
+                
+                List<Intervention> interventions = new ArrayList<Intervention>();
+                interventions = DaoIntervention.getAll();
+                float nbrh=0;
+                for (Intervention inter : interventions) {
+                   // nbrh+=(Integer.parseInt(inter.getEndhour().split(":")[0])-Integer.parseInt(inter.getStarthour().split(":")[0]))+(Integer.parseInt(inter.getEndhour().split(":")[1])-Integer.parseInt(inter.getStarthour().split(":")[1]))/60;
+                  //nbrh+=Integer.parseInt(inter.getEndhour().split(":")[0][0]);
+                    System.out.println(inter.getStarthour());
+                }
+                request.setAttribute("nbrh", nbrh);
                 RequestDispatcher dispatcher = request.getRequestDispatcher("home.jsp");
                 dispatcher.forward(request, response);
     } 
