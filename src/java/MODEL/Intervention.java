@@ -43,8 +43,8 @@ public class Intervention {
         return companyId;
     }
 
-    public void setCompanyId(int company) {
-        this.companyId = company;
+    public void setCompanyId(int companyId) {
+        this.companyId = companyId;
     }
 
     public String getStarthour() {
@@ -79,6 +79,7 @@ public class Intervention {
         this.tasks = tasks;
     }
 
+    
    
     
     

@@ -15,7 +15,7 @@ public class DaoUser extends DbConnector{
     
     public static User create(User user)
     {
-        String sql = "INSERT INTO users (full_name, user_name, email, password, is_admin) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO users (full_name, user_name, email, password, is_admin ) VALUES (?, ?, ?, ?, ?)";
         Connection connection = DbConnector.getDbConnection();
          
         try 
@@ -94,8 +94,8 @@ public class DaoUser extends DbConnector{
                 user.setEmail(resultSet.getString("email"));
                 user.setPassword(resultSet.getString("password"));
                 user.setIs_admin(resultSet.getBoolean("is_admin"));
+                user.setCreated_at(resultSet.getString("created_at"));
 
-                System.out.println(user.getId()+ "  "+user.getFull_name()+ "  "+user.getUser_name()+ " "+user.getEmail()+" "+user.getPassword()+" "+user.getIs_admin());
                 return user;
             }
         } 
@@ -117,7 +117,7 @@ public class DaoUser extends DbConnector{
             Pstatement.setString(3, user.getEmail());
             Pstatement.setString(4, user.getPassword());
             Pstatement.setBoolean(5, user.getIs_admin());
-            Pstatement.setInt(6, user.getId());
+            Pstatement.setInt(7, user.getId());
             Pstatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -162,6 +162,26 @@ public class DaoUser extends DbConnector{
             e.printStackTrace();
         }
         return null;
+    }
+    
+    public int nomberOfUsers(){
+        String sql = "select count(*) as total from users";
+        Statement statement;
+        Connection connection = DbConnector.getDbConnection();
+        ResultSet resultSet;
+        int nbr;
+        try {
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(sql);
+           if (resultSet.first()==true)
+            {
+                nbr=resultSet.getInt("total");
+                return nbr;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
     
     

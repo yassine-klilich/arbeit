@@ -134,4 +134,24 @@ public static void deleteCompany(Integer id) {
             e.printStackTrace();
         }
     }
+
+public int nomberOfCompagnies(){
+        String sql = "select count(*) as total from companies";
+        Statement statement;
+        Connection connection = DbConnector.getDbConnection();
+        ResultSet resultSet;
+        int nbr;
+        try {
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(sql);
+           if (resultSet.first()==true)
+            {
+                nbr=resultSet.getInt("total");
+                return nbr;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }

@@ -9,6 +9,7 @@ package MODEL;
  *
  * @author xpro
  */
+
 public class User {
     private int id;
     private String full_name;
@@ -16,6 +17,7 @@ public class User {
     private String email;
     private String password;
     private boolean is_admin;
+    private String created_at;
 
     public User() {
     }
@@ -67,6 +69,16 @@ public class User {
     public void setIs_admin(boolean is_admin) {
         this.is_admin = is_admin;
     }
+
+    public String getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
+    }
+
+    
     
     
 }

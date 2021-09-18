@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Time;
 
 /**
  *
@@ -67,8 +68,10 @@ public class DaoIntervention {
                 intervention.setUserId(resultSet.getInt("user_id"));
                 intervention.setCompanyId(resultSet.getInt("company_id"));
                 intervention.setDate(resultSet.getString("date"));
-                intervention.setStarthour("start_hour");
-                intervention.setEndhour("end_hour");
+                java.util.Date utilDate = new java.util.Date();
+                System.out.println(start_hour.getTime());
+                intervention.setStarthour(resultSet.getString("start_hour"));
+                intervention.setEndhour(resultSet.getString("end_hour"));
                 intervention.setTasks(getInterTasks(resultSet.getInt("id")));
                 
                 
@@ -199,6 +202,25 @@ public class DaoIntervention {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+     public int nomberOfInterventions(){
+        String sql = "select count(*) as total from interventions";
+        Statement statement;
+        Connection connection = DbConnector.getDbConnection();
+        ResultSet resultSet;
+        int nbr;
+        try {
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(sql);
+           if (resultSet.first()==true)
+            {
+                nbr=resultSet.getInt("total");
+                return nbr;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
     
 }

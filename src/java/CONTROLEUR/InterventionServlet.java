@@ -109,5 +109,7 @@ public class InterventionServlet extends HttpServlet {
         out.print(jsonResponse);
         out.flush();
     }
+    
+    
 
 }

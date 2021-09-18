@@ -15,7 +15,9 @@
     if(session.getAttribute("user") == null || isAdmin == false) {
         response.sendRedirect("login");
     }
+    
 %>
+
 <!DOCTYPE html>
 <html class="loading dark-layout" lang="en" data-layout="dark-layout" data-textdirection="ltr">
 <!-- BEGIN: Head-->
@@ -35,11 +37,12 @@
 
 <!-- BEGIN: Main Menu-->
 <jsp:include page="include/navigation.jsp">
-    <jsp:param name="activeNav" value="company" />
+    <jsp:param name="activeNav" value="users" />
 </jsp:include>
 <!-- END: Main Menu-->
 
 
+<!-- BEGIN: Main Menu-->
 
 
 <!-- BEGIN: Content-->
@@ -68,12 +71,12 @@
                                         <div class="profile-img-container d-flex align-items-center">
                                             <div class="profile-img">
                                                 <img 
-                                                    class="rounded img-fluid" src="Companyavatar/${company.avatar}" width="100" height="100" >
+                                                    class="rounded img-fluid" src="users-mugshot/mugshot_${user.id}"  width="100" height="100" >
                                             </div>
                                             <!-- profile title -->
                                             <div class="profile-title ml-3">
                                                 <h2 class="text-white"></h2>
-                                                <p class="text-white">${company.company_name}</p>
+                                                <p class="text-white">${user.full_name}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -98,6 +101,7 @@
                                                 </svg>
                                             </button>
 
+                                           
                                         </nav>
                                         <!--/ navbar -->
                                     </div>
@@ -113,22 +117,23 @@
                                     <!-- about -->
                                     <div class="card">
                                         <div class="card-body">
-                                            <h5 class="mb-75">Address</h5>
-                                            <p class="card-text">
-                                                ${company.adresse}
-                                            </p>
-                                            <div class="mt-2">
-                                                <h5 class="mb-75">Telephone</h5>
-                                                <p class="card-text">${company.telephone}</p>
-                                            </div>
-                                            <div class="mt-2">
-                                                <h5 class="mb-75">Email:</h5>
-                                                <p class="card-text">${company.email}</p>
-                                            </div>
-                                            <div class="mt-2">
-                                                <h5 class="mb-75">Contact Name</h5>
-                                                <p class="card-text">b${company.contact_name}</p>
-                                            </div>
+                                        <div class="mt-2">
+                                        <h5 class="mb-75">Full Name: </h5>
+                                        <p class="card-text">${user.full_name}</p>
+                                        </div>
+
+                                        <div class="mt-2">
+                                        <h5 class="mb-75">Username:</h5>
+                                        <p class="card-text">${user.user_name}</p>
+                                        </div>
+                                        <div class="mt-2">
+                                        <h5 class="mb-75">Joined:</h5>
+                                        <p class="card-text">${user.created_at}</p>
+                                        </div>
+                                        <div class="mt-2">
+                                        <h5 class="mb-75">Email:</h5>
+                                        <p class="card-text">${user.email}</p>
+                                        </div>
                                         </div>
                                     </div>
                                     <!--/ about -->
@@ -191,3 +196,7 @@
 <!-- END: Body-->
 
 </html>
+
+
+
+

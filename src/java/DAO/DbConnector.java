@@ -17,7 +17,7 @@ public abstract class DbConnector {
 
     public static Connection getDbConnection() {
         Connection connection = null;
-        String url = "jdbc:mysql://localhost:3306/Arbeit";
+        String url = "jdbc:mysql://localhost:3306/Arbeitjee";
         String pass = "";
         String user = "root";
         try {
