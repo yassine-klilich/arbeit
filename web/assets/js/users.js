@@ -83,8 +83,15 @@ function openModalFormUser(mode, userData) {
             const idInput = formUser.elements["id"];
             const fullName = formUser.elements["fullName"];
             const username = formUser.elements["username"];
+            const password = formUser.elements["password"];
+            const confirmPassword = formUser.elements["confirm-password"];
             const email = formUser.elements["email"];
             const isAdmin = formUser.elements["isAdmin"];
+            fullName.classList.remove("is-invalid");
+            username.classList.remove("is-invalid");
+            email.classList.remove("is-invalid");
+            password.classList.remove("is-invalid");
+            confirmPassword.classList.remove("is-invalid");
             idInput.value = userData.id;
             fullName.value = userData.full_name;
             username.value = userData.user_name;
@@ -131,11 +138,13 @@ function initUserFormSubmit() {
     const username = formUser.elements["username"];
     const email = formUser.elements["email"];
     const password = formUser.elements["password"];
+    const confirmPassword = formUser.elements["confirm-password"];
     const isAdmin = formUser.elements["isAdmin"];
     fullName.addEventListener("input", validateFullNameInput);
     username.addEventListener("input", validateUsernameInput);
     email.addEventListener("input", validateEmailInput);
     password.addEventListener("input", validatePasswordInput);
+    confirmPassword.addEventListener("input", validatePasswordInput);
     formUser.addEventListener("submit", formAddUserSubmit);
 }
 
@@ -183,10 +192,18 @@ function validateEmailInput() {
 function validatePasswordInput() {
     const formUser = document.getElementById("formUser");
     const password = formUser.elements["password"];
+    const confirmPassword = formUser.elements["confirm-password"];
     password.classList.remove("is-invalid");
-    if(password.value == null || password.value.trim() == "") {
-        password.classList.add("is-invalid");
-        return false;
+    confirmPassword.classList.remove("is-invalid");
+    if(submitMode == SUBMIT_MODE.ADD || (password.value != null && password.value != '')) {
+        if(password.value == null || password.value.trim() == "") {
+            password.classList.add("is-invalid");
+            return false;
+        }
+        if(confirmPassword.value != password.value) {
+            confirmPassword.classList.add("is-invalid");
+            return false;
+        }   
     }
     return true;
 }

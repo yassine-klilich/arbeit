@@ -125,8 +125,7 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="d-flex justify-content-between">
-                                        <label for="login-password">Password</label><a
-                                            href="page-auth-forgot-password-v2.html"><small>Forgot Password?</small></a>
+                                        <label for="login-password">Password</label>
                                     </div>
                                     <div class="input-group input-group-merge form-password-toggle">
                                         <input class="form-control form-control-merge" id="login-password"
@@ -141,13 +140,6 @@
                                                                                                                 cy="12"
                                                                                                                 r="3"></circle></svg></span>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" id="remember-me" type="checkbox"
-                                               tabindex="3">
-                                        <label class="custom-control-label" for="remember-me"> Remember Me</label>
                                     </div>
                                 </div>
                                 <button class="btn btn-primary btn-block waves-effect waves-float waves-light"

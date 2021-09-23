@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import services.Utility;
 
@@ -43,6 +44,7 @@ public class userServlet extends HttpServlet {
                 request.setAttribute("user", user);
                 RequestDispatcher dispatcher = request.getRequestDispatcher("userprofil.jsp");
                 dispatcher.forward(request, response);
+                return;
             }
         }
         else {
@@ -56,19 +58,19 @@ public class userServlet extends HttpServlet {
         out.flush();
     }
 
-    private final static Logger LOGGER = 
-            Logger.getLogger(userServlet.class.getCanonicalName());
-private String getFileName(final Part part) {
-    final String partHeader = part.getHeader("content-disposition");
-    LOGGER.log(Level.INFO, "Part Header = {0}", partHeader);
-    for (String content : part.getHeader("content-disposition").split(";")) {
-        if (content.trim().startsWith("filename")) {
-            return content.substring(
-                    content.indexOf('=') + 1).trim().replace("\"", "");
+    private final static Logger LOGGER = Logger.getLogger(userServlet.class.getCanonicalName());
+    private String getFileName(final Part part) {
+        final String partHeader = part.getHeader("content-disposition");
+        LOGGER.log(Level.INFO, "Part Header = {0}", partHeader);
+        for (String content : part.getHeader("content-disposition").split(";")) {
+            if (content.trim().startsWith("filename")) {
+                return content.substring(
+                        content.indexOf('=') + 1).trim().replace("\"", "");
+            }
         }
+        return null;
     }
-    return null;
-}
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = new User();
@@ -79,13 +81,20 @@ private String getFileName(final Part part) {
         String password = request.getParameter("password");
         String isAdmin = request.getParameter("isAdmin");
         
-        
-        
+        if(username == null) {
+            HttpSession session = request.getSession();
+            User usr = (User)session.getAttribute("user");
+            user.setUser_name(usr.getUser_name());
+            user.setIs_admin(usr.getIs_admin());
+        }
+        else {
+            user.setUser_name(username);
+            user.setPassword(password);
+            user.setIs_admin(isAdmin != null);
+        }
         user.setFull_name(fullName);
-        user.setUser_name(username);
         user.setEmail(email);
         user.setPassword(password);
-        user.setIs_admin(isAdmin != null);
         
         if(id != null && !id.equals("")) {
             user.setId(Integer.parseInt(id));
@@ -96,7 +105,7 @@ private String getFileName(final Part part) {
         }
         int userId = user.getId();
         Part file = request.getPart("avatar");
-        String uploadPath = "/home/xpro/NetBeansProjects/arbeit-j2ee/web/users-mugshot/mugshot_" + userId;
+        String uploadPath = "C:\\Users\\Yassine Klilich\\Documents\\NetBeansProjects\\arbeit-j2ee\\web\\users-mugshot\\mugshot_" + userId;
         try{
             FileOutputStream fos = new FileOutputStream(uploadPath);
             InputStream is = file.getInputStream();

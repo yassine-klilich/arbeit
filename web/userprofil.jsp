@@ -6,13 +6,14 @@
     String userName = "";
     int userId = 0;
     boolean isAdmin = false;
+    User usr = null;
     if(session.getAttribute("user") != null) {
-        User usr = (User)session.getAttribute("user");
+        usr = (User)session.getAttribute("user");
         userName = usr.getUser_name();
         userId = usr.getId();
         isAdmin = usr.getIs_admin();
     }
-    if(session.getAttribute("user") == null || isAdmin == false) {
+    if(session.getAttribute("user") == null) {
         response.sendRedirect("login");
     }
     
@@ -37,7 +38,7 @@
 
 <!-- BEGIN: Main Menu-->
 <jsp:include page="include/navigation.jsp">
-    <jsp:param name="activeNav" value="users" />
+    <jsp:param name="activeNav" value="" />
 </jsp:include>
 <!-- END: Main Menu-->
 
@@ -68,16 +69,32 @@
 
                                     <div class="position-relative">
                                         <!-- profile picture -->
-                                        <div class="profile-img-container d-flex align-items-center">
-                                            <div class="profile-img">
-                                                <img 
-                                                    class="rounded img-fluid" src="users-mugshot/mugshot_${user.id}"  width="100" height="100" >
+                                        <div class="profile-img-container d-flex align-items-center" style="display: flex; justify-content: space-between; padding: 0 3em;">
+                                            <div style="display: flex;">
+                                                <div class="profile-img">
+                                                    <img 
+                                                        class="rounded img-fluid" src="users-mugshot/mugshot_${user.id}"  width="100" height="100" >
+                                                </div>
+                                                <!-- profile title -->
+                                                <div class="profile-title ml-1">
+                                                    <h2 class="text-white"></h2>
+                                                    <p class="text-white">${user.full_name}</p>
+                                                </div>
                                             </div>
-                                            <!-- profile title -->
-                                            <div class="profile-title ml-3">
-                                                <h2 class="text-white"></h2>
-                                                <p class="text-white">${user.full_name}</p>
-                                            </div>
+                                            <!-- edit button -->
+                                            <button class="btn btn-primary waves-effect waves-float waves-light" id="editBtn"  onclick="openModalFormUser()">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                     stroke-width="2" stroke-linecap="round"
+                                                     stroke-linejoin="round"
+                                                     class="feather feather-edit d-block d-md-none">
+                                                    <path
+                                                        d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                    <path
+                                                        d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                                </svg>
+                                                <span class="font-weight-bold d-none d-md-block">Edit</span>
+                                            </button>
                                         </div>
                                     </div>
 
@@ -128,7 +145,7 @@
                                         </div>
                                         <div class="mt-2">
                                         <h5 class="mb-75">Joined:</h5>
-                                        <p class="card-text">${user.created_at}</p>
+                                        <p class="card-text">20-08-2021</p>
                                         </div>
                                         <div class="mt-2">
                                         <h5 class="mb-75">Email:</h5>
@@ -150,6 +167,55 @@
     </div>
 </div>
 <!-- END: Content-->
+
+
+
+<div class="modal fade text-left" id="modalFormUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel18" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalFormUserHeading">Edit User</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="formUser" method="POST"  enctype="multipart/form-data" action="/arbeit-j2ee/users" onsubmit="onSubmitUserProfile(event)">
+            <div class="modal-body">
+                <div class="alert alert-danger" style="display:none"></div>
+                <input type="hidden" name="id" value="${user.getId()}">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" class="form-control"  name="fullName" id="fullName" placeholder="Full Name">
+                    <span class="invalid-feedback">This field is required</span>
+                </div>
+                <div class="form-group">
+                    <label for="Email">Email</label>
+                    <input type="email" class="form-control" name="email" id="Email" placeholder="Email">
+                    <span class="invalid-feedback">This field is required</span>
+                </div>
+                <div class="form-group">
+                    <label for="Password">Password</label>
+                    <input type="password" class="form-control" name="password" id="Password" placeholder="******">
+                    <span class="invalid-feedback">This field is required</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="Password_Confirmation">Password Confirmation</label>
+                    <input type="password" class="form-control" name="password_confirmation" id="Password_Confirmation" placeholder="******">
+                    <span class="invalid-feedback">Confirm password do not match</span>
+                </div>
+                <div class="form-group">
+                    <label for="avatar">Avatar</label>
+                    <input id="avatar" type="file" class="form-control" name="avatar">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="submit" class="btn btn-primary" value="Submit">
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <div class="sidenav-overlay"></div>
 <div class="drag-target"></div>
@@ -181,6 +247,7 @@
 <script src="asset/app-assets/js/scripts/extensions/ext-component-sweet-alerts.js"></script>
 <!-- END: Page JS-->
 <script src="asset/myjs/main.js"></script>
+<script src="assets/js/xhr.js"></script>
 
 <script>
     $(window).on('load', function () {
@@ -190,7 +257,80 @@
                 height: 14
             });
         }
-    })
+    });
+    
+    const modalFormUser = new bootstrap.Modal(document.getElementById('modalFormUser'));
+
+    function openModalFormUser() {
+        const formUser = document.getElementById("formUser");
+        formUser.reset();
+        const fullName = formUser.elements["fullName"];
+        const email = formUser.elements["email"];
+        fullName.value = "${user.getFull_name()}";
+        email.value = "${user.getEmail()}";
+        modalFormUser.show();
+    }
+
+    function onSubmitUserProfile(event) {
+        event.preventDefault();
+        const formUser = document.getElementById('formUser');
+        const isValidforedit = validateFullNameInput() & validateEmailInput() & validatePasswordConfirmation();
+        if(isValidforedit==1){
+            formUser.submit();
+        }
+    }
+
+    function validateFullNameInput() {
+        const formUser = document.getElementById("formUser");
+        const fullName = formUser.elements["fullName"];
+        fullName.classList.remove("is-invalid");
+        if(fullName.value == null || fullName.value.trim() == "") {
+            fullName.classList.add("is-invalid");
+            return false;
+        }
+        return true;
+    }
+
+    function validateEmailInput() {
+        const formUser = document.getElementById("formUser");
+        const email = formUser.elements["email"];
+        email.classList.remove("is-invalid");
+        if(email.value == null || email.value.trim() == "") {
+            email.classList.add("is-invalid");
+            return false;
+        }
+        return true;
+    }
+
+    function validatePasswordInput() {
+        const formUser = document.getElementById("formUser");
+        const password = formUser.elements["password"];
+        password.classList.remove("is-invalid");
+        if(password.value == null || password.value.trim() == "") {
+            password.classList.add("is-invalid");
+            return false;
+        }
+        return true;
+    }
+
+    function validatePasswordConfirmation() {
+        const formUser = document.getElementById("formUser");
+        const password = formUser.elements["password"];
+        const confirmPassword = formUser.elements["password_confirmation"];
+        password.classList.remove("is-invalid");
+        confirmPassword.classList.remove("is-invalid");
+        if(password.value != null && password.value != '') {
+            if(password.value == null || password.value.trim() == "") {
+                password.classList.add("is-invalid");
+                return false;
+            }
+            if(confirmPassword.value != password.value) {
+                confirmPassword.classList.add("is-invalid");
+                return false;
+            }   
+        }
+        return true;
+    }
 </script>
 </body>
 <!-- END: Body-->

@@ -12,78 +12,12 @@ window.addEventListener("load", function(){
     modalFormIntervention = new bootstrap.Modal(document.getElementById('modalFormIntervention'));
 });
 
-function loadInterventionsDataTable() {
-    XHR_CALL.getInterventions()
-    .then(data => {
-        const interventionsTable = document.getElementById("interventions-table");
-        let tbody = interventionsTable.tBodies[0];
-        if(tbody == null) {
-            tbody = interventionsTable.createTBody();
-        }
-        tbody.innerHTML = "";
-        for(let i = 0; i < data.length; i++) {
-            const item = data[i];
-            const trElement = document.createElement("tr");
-            trElement.innerHTML = `
-                <td>
-                    <a href="#"><span class="font-weight-bold">${item.id}</span></a>
-                </td>
-                <td>${item.date}</td>
-                <td>
-                    ${item.fullName}
-                </td>
-                <td>${item.companyIdName}</td>
-                <td>${item.startHour}</td>
-                <td>${item.endHour}</td>
-                <td>
-                    <div class="dropdown">
-                        <button type="button"
-                                class="btn btn-sm dropdown-toggle hide-arrow waves-effect waves-float waves-light"
-                                data-toggle="dropdown">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                 class="feather feather-more-vertical">
-                                <circle cx="12" cy="12" r="1"></circle>
-                                <circle cx="12" cy="5" r="1"></circle>
-                                <circle cx="12" cy="19" r="1"></circle>
-                            </svg>
-                        </button>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal"
-                               data-target="#editIntervention">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                     class="feather feather-edit-2 mr-50">
-                                    <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
-                                </svg>
-                                <span>Edit</span>
-                            </a>
-                            <a class="dropdown-item" onclick="deleteIntervention(${item.id})" id="confirm-text">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                     class="feather feather-trash mr-50">
-                                    <polyline points="3 6 5 6 21 6"></polyline>
-                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                </svg>
-                                <span>Delete</span>
-                            </a>
-                        </div>
-                    </div>
-                </td>                          
-            `;
-            const editBtn = trElement.querySelector("#edit-btn");
-            editBtn.addEventListener("click", openModalFormIntervention.bind(editBtn, SUBMIT_MODE.EDIT, item));
-            tbody.appendChild(trElement);
-        }
-    });
-}
 
 function openModalFormIntervention(mode, interventionData) {
     const formIntervention = document.getElementById("formIntervention");
     formIntervention.reset();
+    $('#company').trigger('change');
+    $('#tasks').trigger('change'); 
     const modalFormInterventionHeading = document.getElementById("modalFormInterventionHeading");
     submitMode = mode;
     interventionToEdit = interventionData;
@@ -103,8 +37,14 @@ function openModalFormIntervention(mode, interventionData) {
             companyId.values = interventionData.companyId;
             starthour.value = interventionData.starthour;
             endhour.value = interventionData.endhour;
-            tasks.value = interventionData.tasks;
             
+            $('#company').trigger('change');
+            starthour.value = interventionData.starthour;
+            endhour.value = interventionData.endhour;
+            for(var i = 0; i < interventionData.tasks.length; i++) {
+                tasks.options[i].selected = interventionData.tasks[i].id;
+            }
+            $('#tasks').trigger('change'); 
         } break;
     }
     modalFormIntervention.show();
@@ -194,7 +134,7 @@ function formAddInterventionSubmit(event) {
                     companyId: companyId.value,
                     starthour: starthour.value,
                     endhour: endhour.value,
-                    tasks: tasks.value
+                    tasks: tasksId
                 })
                 .then(() => {
                     loadInterventionsDataTable();

@@ -84,7 +84,9 @@
                                     <th>Company Name</th>
                                     <th>Start Hour</th>
                                     <th>End Hour</th>
-                                    <th>Action</th>
+                                    <% if(isAdmin == true) { %>
+                                        <th>Action</th>
+                                    <% } %>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -221,6 +223,83 @@
 <script src="asset/app-assets/js/scripts/forms/pickers/form-pickers.js"></script>
 <script src="asset/app-assets/js/scripts/extensions/ext-component-sweet-alerts.js"></script>
 <!-- END: Page JS-->
+
+
+<script>
+    function loadInterventionsDataTable() {
+        XHR_CALL.getInterventions()
+        .then(data => {
+            const interventionsTable = document.getElementById("interventions-table");
+            let tbody = interventionsTable.tBodies[0];
+            if(tbody == null) {
+                tbody = interventionsTable.createTBody();
+            }
+            tbody.innerHTML = "";
+            for(let i = 0; i < data.length; i++) {
+                const item = data[i];
+                const trElement = document.createElement("tr");
+                trElement.innerHTML = "<td>" +
+                        `<a href="/arbeit-j2ee/intervention-profile?id=` + item.id + `"><span class="font-weight-bold">` + item.id + `</span></a>` +
+                    "</td>" +
+                    "<td>" + item.date + "</td>" +
+                    "<td>" + item.userName + "</td>" +
+                    "<td>" + item.companyName + "</td>" +
+                    "<td>" + item.starthour + "</td>" +
+                    "<td>" + item.endhour + "</td>" +
+                    <% if(isAdmin == true) { %>
+                        `<td>
+                            <div class="dropdown">
+                                <button type="button"
+                                        class="btn btn-sm dropdown-toggle hide-arrow waves-effect waves-float waves-light"
+                                        data-toggle="dropdown">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                         viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                         class="feather feather-more-vertical">
+                                        <circle cx="12" cy="12" r="1"></circle>
+                                        <circle cx="12" cy="5" r="1"></circle>
+                                        <circle cx="12" cy="19" r="1"></circle>
+                                    </svg>
+                                </button>
+
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" id="edit-btn" href="javascript:void(0);" data-toggle="modal"
+                                           data-target="#editIntervention">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                 class="feather feather-edit-2 mr-50">
+                                                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                                            </svg>
+                                            <span>Edit</span>
+                                        </a>
+                                        <a class="dropdown-item" onclick="deleteIntervention(` + item.id + `)" id="confirm-text">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                 class="feather feather-trash mr-50">
+                                                <polyline points="3 6 5 6 21 6"></polyline>
+                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                            </svg>
+                                            <span>Delete</span>
+                                        </a>
+                                    </div>
+
+                            </div>
+                        </td>`;
+                    <% } else { %>
+                        ""
+                    <% } %>
+                <% if(isAdmin == true) { %>
+                    const editBtn = trElement.querySelector("#edit-btn");
+                    editBtn.addEventListener("click", openModalFormIntervention.bind(editBtn, SUBMIT_MODE.EDIT, item));
+                <% } %>
+                tbody.appendChild(trElement);
+            }
+        });
+    }
+</script>
+
 <script src="assets/js/xhr.js"></script>
 <script src="assets/js/intervention.js"></script>
 

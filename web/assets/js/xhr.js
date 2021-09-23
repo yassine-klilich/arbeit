@@ -8,6 +8,26 @@ const XHR_CALL = (function (){
     
     const _XHR_ = {};
     
+    _XHR_.getUser = function(id) {
+        return fetch(`${URLs.USERS}?id=${id}`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((response)=>{
+            if(response.ok === true && response.status === 200) {
+                return response.json();
+            }
+            else {
+                throw new Error(`${response.status}, ${response.statusText}`);
+            }
+        })
+        .catch(err => {
+            console.error(`ERROR[XHR_CALL] :: getUsers \n`, err);
+        });
+    };
+    
     _XHR_.getUsers = function() {
         return fetch(URLs.USERS, {
             method: "GET",

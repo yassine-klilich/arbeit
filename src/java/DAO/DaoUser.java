@@ -65,6 +65,8 @@ public class DaoUser extends DbConnector{
                 user.setEmail(resultSet.getString("email"));
                 user.setPassword(resultSet.getString("password"));
                 user.setIs_admin(resultSet.getBoolean("is_admin"));
+                
+//user.setCreated_at(resultSet.getString("created_at"));
                
                 users.add(user);
             }
@@ -94,7 +96,8 @@ public class DaoUser extends DbConnector{
                 user.setEmail(resultSet.getString("email"));
                 user.setPassword(resultSet.getString("password"));
                 user.setIs_admin(resultSet.getBoolean("is_admin"));
-                user.setCreated_at(resultSet.getString("created_at"));
+                System.out.println(resultSet.getString("created_at"));
+                //user.setCreated_at(resultSet.getString("created_at"));
 
                 return user;
             }
@@ -107,17 +110,18 @@ public class DaoUser extends DbConnector{
 
 
     public static User updateUser(User user) {
-     String sql = " UPDATE users set  full_name=?, user_name=?, email=?, password=?, is_admin=? WHERE id =?";
+        //String sql = " UPDATE users set  full_name=?, user_name=?, email=?, password=?, is_admin=? WHERE id =?";
         Connection connection = DbConnector.getDbConnection();
         PreparedStatement Pstatement;
         try {
+            String sql = "call sp_updateUser(?, ?, ?, ?, ?, ?)";
             Pstatement = connection.prepareStatement(sql);
-            Pstatement.setString(1, user.getFull_name());
-            Pstatement.setString(2, user.getUser_name());
-            Pstatement.setString(3, user.getEmail());
-            Pstatement.setString(4, user.getPassword());
-            Pstatement.setBoolean(5, user.getIs_admin());
-            Pstatement.setInt(7, user.getId());
+            Pstatement.setInt(1, user.getId());
+            Pstatement.setString(2, user.getFull_name());
+            Pstatement.setString(3, user.getUser_name());
+            Pstatement.setString(4, user.getEmail());
+            Pstatement.setString(5, user.getPassword());
+            Pstatement.setBoolean(6, user.getIs_admin());
             Pstatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

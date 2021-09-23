@@ -15,6 +15,8 @@ public class Intervention {
     private int id;
     private int userId;
     private int companyId;
+    private String userName;
+    private String companyName;
     private String starthour;
     private String endhour;
     private String date;
@@ -23,6 +25,22 @@ public class Intervention {
     public Intervention() {
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+    
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+    
     public int getId() {
         return id;
     }

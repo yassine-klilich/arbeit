@@ -54,7 +54,7 @@ public class DaoIntervention {
 
     public static List<Intervention> getAll() {
         List<Intervention> interventions = new ArrayList<Intervention>();
-        String sql = "SELECT * FROM interventions ;";
+        String sql = "SELECT interventions.id as id, interventions.user_id as user_id, interventions.company_id as company_id, interventions.date as date, users.full_name as full_name, companies.company_name as company_name, interventions.start_hour as start_hour, interventions.end_hour as end_hour FROM interventions inner join users on interventions.user_id = users.id inner join companies on interventions.company_id = companies.id";
         Connection connection = DbConnector.getDbConnection();
         Statement statement;
         ResultSet resultSet;
@@ -67,9 +67,9 @@ public class DaoIntervention {
                 intervention.setId(resultSet.getInt("id"));
                 intervention.setUserId(resultSet.getInt("user_id"));
                 intervention.setCompanyId(resultSet.getInt("company_id"));
+                intervention.setUserName(resultSet.getString("full_name"));
+                intervention.setCompanyName(resultSet.getString("company_name"));
                 intervention.setDate(resultSet.getString("date"));
-                java.util.Date utilDate = new java.util.Date();
-                System.out.println(start_hour.getTime());
                 intervention.setStarthour(resultSet.getString("start_hour"));
                 intervention.setEndhour(resultSet.getString("end_hour"));
                 intervention.setTasks(getInterTasks(resultSet.getInt("id")));
@@ -96,11 +96,11 @@ public class DaoIntervention {
             if (resultSet.first() == true) {
                 System.out.println(" task found ");
                 intervention.setId(resultSet.getInt("id"));
-                intervention.setUserId(resultSet.getInt("userId"));
-                intervention.setCompanyId(resultSet.getInt("companyId"));
+                intervention.setUserId(resultSet.getInt("user_id"));
+                intervention.setCompanyId(resultSet.getInt("company_id"));
                 intervention.setDate(resultSet.getString("date"));
-                intervention.setStarthour("starthour");
-                intervention.setEndhour("endhour");
+                intervention.setStarthour(resultSet.getString("start_hour"));
+                intervention.setEndhour(resultSet.getString("end_hour"));
                 intervention.setTasks(getInterTasks(resultSet.getInt("id")));
                 return intervention;
             }
@@ -111,17 +111,15 @@ public class DaoIntervention {
     }
 
     public static Intervention updateIntervention(Intervention intervention) {
-        String sql = " UPDATE interventions set  date=?,start_hour=?,end_hour=? WHERE id=?";
+        String sql = "UPDATE `interventions` SET `date`=?,`start_hour`=?,`end_hour`=? WHERE id=?";
         Connection connection = DbConnector.getDbConnection();
         PreparedStatement Pst;
         try {
             Pst = connection.prepareStatement(sql);
-            Pst.setInt(1,intervention.getUserId());
-            Pst.setInt(2, intervention.getCompanyId());
-            Pst.setString(3,intervention.getDate());
-            Pst.setString(4, intervention.getStarthour());
-            Pst.setString(5, intervention.getEndhour());
-            Pst.setInt(6, intervention.getId());
+            Pst.setString(1, intervention.getDate());
+            Pst.setString(2, intervention.getStarthour());
+            Pst.setString(3, intervention.getEndhour());
+            Pst.setInt(4, intervention.getId());            
             Pst.executeUpdate();
             deleteTaskInetr(intervention.getId());
             createTaskInter(intervention);
@@ -138,8 +136,8 @@ public class DaoIntervention {
         try {
             statement = connection.prepareStatement(sql);
             statement.setInt(1, interventionId);
-            statement.executeUpdate();
             deleteTaskInetr(interventionId);
+            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -158,6 +156,7 @@ public class DaoIntervention {
             resultSet = Pst.executeQuery();
             while (resultSet.next()) {
                 task = new Task();
+                task.setId(resultSet.getInt("id"));
                 task.setTitle(resultSet.getString("title"));
                 task.setDescription(resultSet.getString("description"));
                

@@ -120,14 +120,19 @@
                         <input type="password" class="form-control" name="password" id="password" placeholder="Password">
                         <span class="invalid-feedback">This field is required</span>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="isAdmin" id="isAmin">
-                        <label class="form-check-label" for="isAmin">Admin</label>
-                    </div>
                     <div class="form-group">
+                        <label for="password">Confirm Password</label>
+                        <input type="password" class="form-control" name="confirm-password" id="confirm-password" placeholder="Confirm Password">
+                        <span class="invalid-feedback">Confirm password do not match</span>
+                    </div>
+                    <div class="form-group" style="margin-bottom: -8px;">
                         <label for="ContactName">Avatar</label>
                         <input type="file" class="form-control" name="avatar" id="avatar" accept="image/jpeg">
                         <span id="avatar_error" class="avatar"></span>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="isAdmin" id="isAmin">
+                        <label class="form-check-label" for="isAmin">Admin</label>
                     </div>
                 </div>
                 <div class="modal-footer">

@@ -1,11 +1,11 @@
 -- Drop table if exists
-DROP DATABASE IF EXISTS `Arbeit`;
+DROP DATABASE IF EXISTS `Arbeit-J2EE`;
 
 -- Create the database
-CREATE DATABASE `Arbeit`;
+CREATE DATABASE `Arbeit-J2EE`;
 
 -- Use the created database
-use `Arbeit`;
+use `Arbeit-J2EE`;
 
 --
 -- Structure de la table `companies`

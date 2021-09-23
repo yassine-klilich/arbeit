@@ -1,4 +1,15 @@
+<%@page import="MODEL.User"%>
 <%String activeNav = request.getParameter("activeNav");%>
+<%
+    boolean isAdmin = false;
+    if(session.getAttribute("user") != null) {
+        User usr = (User)session.getAttribute("user");
+        isAdmin = usr.getIs_admin();
+    }
+    if(session.getAttribute("user") == null) {
+        response.sendRedirect("login");
+    }
+%>
 <div class="main-menu menu-fixed menu-dark menu-accordion menu-shadow" data-scroll-to-active="true">
     <div class="navbar-header">
         <ul class="nav navbar-nav flex-row">
@@ -59,18 +70,22 @@
                     <span class="menu-title text-truncate">Home</span>
                 </a>
             </li>
-            <li class="nav-item <%=(activeNav.equals("users"))?"active":""%>">
-                <a class="d-flex align-items-center" <%=(activeNav.equals("users"))?"":" href='users.jsp'"%>">
-                    <i data-feather="circle"></i>
-                    <span class="menu-title text-truncate" data-i18n="Email">Users</span>
-                </a>
-            </li>
-            <li class="nav-item <%=(activeNav.equals("companies"))?"active":""%>">
-                <a class="d-flex align-items-center" <%=(activeNav.equals("companies"))?"":" href='companies.jsp'"%>">
-                    <i data-feather="circle"></i>
-                    <span class="menu-title text-truncate" data-i18n="Chat">Companies</span>
-                </a>
-            </li>
+            <%
+                if(isAdmin == true) {
+            %>
+                <li class="nav-item <%=(activeNav.equals("users"))?"active":""%>">
+                    <a class="d-flex align-items-center" <%=(activeNav.equals("users"))?"":" href='users.jsp'"%>">
+                        <i data-feather="circle"></i>
+                        <span class="menu-title text-truncate" data-i18n="Email">Users</span>
+                    </a>
+                </li>
+                <li class="nav-item <%=(activeNav.equals("companies"))?"active":""%>">
+                    <a class="d-flex align-items-center" <%=(activeNav.equals("companies"))?"":" href='companies.jsp'"%>">
+                        <i data-feather="circle"></i>
+                        <span class="menu-title text-truncate" data-i18n="Chat">Companies</span>
+                    </a>
+                </li>     
+            <% } %>
             <li class="nav-item <%=(activeNav.equals("interventions"))?"active":""%>">
                 <a class="d-flex align-items-center" <%=(activeNav.equals("interventions"))?"":" href='interventions.jsp'"%>">
                     <i data-feather="circle"></i>
@@ -84,8 +99,8 @@
                     <span class="menu-title text-truncate" data-i18n="Calendar">Tasks</span>
                 </a>
             </li>
-            <li class="nav-item <%=(activeNav.equals("timeSheet"))?"active":""%>">
-                <a class="d-flex align-items-center" <%=(activeNav.equals("home"))?"":" href=''"%>">
+            <li class="nav-item <%=(activeNav.equals("timesheet"))?"active":""%>">
+                <a class="d-flex align-items-center" <%=(activeNav.equals("timesheet"))?"":" href='timesheet.jsp'"%>">
                     <i data-feather="circle"></i>
                     <span class="menu-title text-truncate" data-i18n="Todo">Time Sheet</span>
                 </a>

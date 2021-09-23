@@ -507,7 +507,7 @@ a.text-white:focus {
   h2 {
     page-break-after: avoid;
   }
-  @ page {
+  @page {
     size: a3;
   }
   body {
@@ -651,7 +651,7 @@ a.text-white:focus {
 }
 
 @media (min-width: 768px) {
-  @ keyframes show-navbar-dropdown {
+  @keyframes show-navbar-dropdown {
     0% {
       transition: visibility .25s, opacity .25s, transform .25s;
       transform: translate(0, 10px) perspective(200px) rotateX(-2deg);
@@ -703,6 +703,22 @@ p {
   line-height: 1.7;
 }
 
+.icon-wrapper {
+    width: 80px;
+    height: 80px;
+}
+.icon-wrapper .fas {
+    font-size: 36px;
+}
+.home-static-item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 20px;
+}
+.data-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-self: center;
 }
 
 </style>
@@ -726,7 +742,7 @@ p {
         userId = usr.getId();
         isAdmin = usr.getIs_admin();
     }
-    if(session.getAttribute("user") == null || isAdmin == false) {
+    if(session.getAttribute("user") == null) {
         response.sendRedirect("login");
     }
 %>
@@ -784,83 +800,51 @@ p {
                             Please feel free to contact your admin for any problem or disruption of the service.<br>
                             Enjoy and have a great day arbeiting !</p>
                             </div>
-                            <div class="container-fluid">
-                                <div class="header-body">
-                            <div class="row">
-                                <div class="col-xl-3 col-lg-6">
-                                  <div class="card card-stats mb-4 mb-xl-0">
-                                    <div class="card-body">
-                                      <div class="row">
-                                        <div class="col">
-                                          <h5 class="card-title text-uppercase text-muted mb-0">Number of users</h5>
-                                          <span class="h2 text-light font-weight-bold mb-0">${users}</span>
+                                <div class="container-fluid">
+                                    <div class="header-body">
+                                        <div style="padding: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                                            <div class="home-static-item">
+                                                <div class="icon icon-shape bg-danger text-white rounded-circle shadow icon-wrapper">
+                                                    <i class="fas fa-users"></i>
+                                                </div>
+                                                <div class="data-wrapper">
+                                                    <h5 class="card-title text-uppercase text-muted mb-0">Number of users</h5>
+                                                    <span class="h2 text-light font-weight-bold mb-0">${users}</span>
+                                                </div>
+                                            </div>
+                                            <div class="home-static-item">
+                                                <div class="icon icon-shape bg-warning text-white rounded-circle shadow icon-wrapper">
+                                                  <i class="fas fa-building"></i>
+                                                </div>
+                                                <div class="data-wrapper">
+                                                    <h5 class="card-title text-light text-uppercase text-muted mb-0">Arbeit Clients</h5>
+                                                    <span class="h2 text-light font-weight-bold mb-0">${clients}</span>
+                                                </div>
+                                            </div>
+                                            <div class="home-static-item">
+                                                <div class="icon icon-shape bg-yellow text-white rounded-circle shadow icon-wrapper">
+                                                  <i class="fas fa-briefcase"></i>
+                                                </div>
+                                                <div class="data-wrapper">
+                                                    <h5 class="card-title text-light text-uppercase text-muted mb-0">Total Interventions</h5>
+                                                    <span class="h2 text-light font-weight-bold mb-0">${interventions}</span>
+                                                </div>
+                                            </div>
+                                            <div class="home-static-item">
+                                                <div class="icon icon-shape bg-info text-white rounded-circle shadow icon-wrapper">
+                                                  <i class="fas fa-chart-pie"></i>
+                                                </div>
+                                                <div class="data-wrapper">
+                                                    <h5 class="card-title text-light text-uppercase text-muted mb-0">Cumulated work hours</h5>
+                                                    <span class="h2 text-light font-weight-bold mb-0">${workHours} Hours</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="col-auto">
-                                          <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
-                                            <i class="fas fa-users"></i>
-                                          </div>
-                                        </div>
-                                      </div>
                                     </div>
-                                  </div>
                                 </div>
-                                <div class="col-xl-3 col-lg-6">
-                                  <div class="card card-stats mb-4 mb-xl-0">
-                                    <div class="card-body">
-                                      <div class="row">
-                                        <div class="col">
-                                          <h5 class="card-title text-light text-uppercase text-muted mb-0">Arbeit Clients</h5>
-                                          <span class="h2 text-light font-weight-bold mb-0">${clients}</span>
-                                        </div>
-                                        <div class="col-auto">
-                                          <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
-                                            <i class="fas fa-building"></i>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="col-xl-3 col-lg-6">
-                                  <div class="card card-stats mb-4 mb-xl-0">
-                                    <div class="card-body">
-                                      <div class="row">
-                                        <div class="col">
-                                          <h5 class="card-title text-light text-uppercase text-muted mb-0">Total Interventions</h5>
-                                          <span class="h2 text-light font-weight-bold mb-0">${interventions}</span>
-                                        </div>
-                                        <div class="col-auto">
-                                          <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
-                                            <i class="fas fa-briefcase"></i>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="col-xl-3 col-lg-6">
-                                  <div class="card card-stats mb-4 mb-xl-0">
-                                    <div class="card-body">
-                                      <div class="row">
-                                        <div class="col">
-                                          <h5 class="card-title text-light text-uppercase text-muted mb-0">Cumulated work hours</h5>
-                                          <span class="h2 text-light font-weight-bold mb-0"></span>
-                                        </div>
-                                        <div class="col-auto">
-                                          <div class="icon icon-shape bg-info text-white rounded-circle shadow">
-                                            <i class="fas fa-chart-pie"></i>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
                             </div>
                         </div>
-                     </div>
                     </div>
-                </div>
                 </div>
             </div>
         </div>
